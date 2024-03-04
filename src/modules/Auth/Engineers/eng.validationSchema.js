@@ -21,7 +21,7 @@ export const SignUpSchema = {
         .required(), 
       email: generalFields.email, 
       password: generalFields.password, 
-      cPassword: joi.valid(joi.ref('password')).required(), 
+    //   cPassword: joi.valid(joi.ref('password')).required(), 
       gender: joi.string().optional(), 
       
     }) 
