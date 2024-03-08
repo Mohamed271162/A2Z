@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.1.0",
+    "bcrypt": "^5.1.1",
     "cloudinary": "^1.39.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
@@ -28,6 +28,7 @@
     "nanoid": "^4.0.2",
     "nodemailer": "^6.9.7",
     "nodemon": "^3.1.0",
-    "slugify": "^1.6.6"
+    "slugify": "^1.6.6",
+    "uninstall": "^0.0.0"
   }
 }
