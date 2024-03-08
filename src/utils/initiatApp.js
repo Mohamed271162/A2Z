@@ -11,6 +11,7 @@ app.use(express.urlencoded({extended:true}))
 connectionDB()
 app.use(cors())
 
+app.get('/', (req, res) => res.send('Hello World!'))
 // app.use(middleware.decodeToken)
 app.use('/engineer',routers.engineerRouter)
 app.use('/admin',routers.adminRouter)
@@ -23,7 +24,6 @@ res.status(404).json({ message: '404 Not Found URL' }),
 )
 
 app.use(globalResponse)
-app.get('/', (req, res) => res.send('Hello World!'))
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 }
