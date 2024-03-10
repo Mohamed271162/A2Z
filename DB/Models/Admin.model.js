@@ -1,4 +1,3 @@
-import { string } from 'joi';
 import { Schema, model } from 'mongoose'
 import mongoose from "mongoose";
 
@@ -55,7 +54,7 @@ const EngineerSchema = new Schema(
         },
         
         phone:{
-            type:Number,
+            type:String,
             default:'+20100000000'
         },
 
