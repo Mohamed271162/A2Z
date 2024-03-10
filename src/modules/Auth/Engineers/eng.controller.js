@@ -231,6 +231,8 @@ export const profilePic = async (req, res, next) => {
             secure_url,
             public_id,
         },
+        new: true,
+        
     },
   )
     if (engineer) {

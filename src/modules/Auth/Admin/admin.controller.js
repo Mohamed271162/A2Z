@@ -124,7 +124,7 @@ export const signInO = async (req, res, next) => {
     //OTP Check
     const isExisted = await AdminModel.findOne({ OTP })
     if (!isExisted) {
-        return next(new Error(' Not  Found', { cause: 400 }))
+        return next(new Error(' mama 2ar3a', { cause: 400 }))
     }
     const token = generateToken({
         payload: {
