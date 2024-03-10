@@ -1,3 +1,4 @@
+import { string } from 'joi';
 import { Schema, model } from 'mongoose'
 import mongoose from "mongoose";
 
@@ -15,7 +16,7 @@ const EngineerSchema = new Schema(
             required: true,
         },
         OTP: {
-            type: Number,
+            type: String,
             required: true,
             unique: true,
         },
