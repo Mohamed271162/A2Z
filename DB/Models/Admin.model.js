@@ -15,7 +15,7 @@ const EngineerSchema = new Schema(
             required: true,
         },
         OTP: {
-            type: Number,
+            type: String,
             required: true,
             unique: true,
         },
