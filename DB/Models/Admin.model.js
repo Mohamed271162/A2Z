@@ -15,7 +15,7 @@ const EngineerSchema = new Schema(
             required: true,
         },
         OTP: {
-            type: String,
+            type: Number,
             required: true,
             unique: true,
         },
@@ -54,7 +54,7 @@ const EngineerSchema = new Schema(
         },
         
         phone:{
-            type:String,
+            type:Number,
             default:'+20100000000'
         },
 
