@@ -21,9 +21,9 @@ export const signUp = async (req, res, next) => {
 
     } = req.body
 
-    // if (!req.file) {
-    //     return next(new Error('plz upload identifier pic', { cause: 400 }))
-    // }
+    if (!req.file) {
+        return next(new Error('plz upload identifier pic', { cause: 400 }))
+    }
     // email check
     const isEmailDuplicate = await EngineerModel.findOne({ email })
     if (isEmailDuplicate) {
