@@ -1,16 +1,16 @@
-import admin from "../config/firebase-config.js";
-// Firebase Authentication Middleware
-export const authenticate = async (req, res, next) => {
-	const { idToken } = req.body;
+// import admin from "../config/firebase-config.js";
+// // Firebase Authentication Middleware
+// export const authenticate = async (req, res, next) => {
+// 	const { idToken } = req.body;
   
-	try {
-	  const decodedToken = await admin.auth().verifyIdToken(idToken);
-	  req.uid = decodedToken.uid;
-	  next();
-	} catch (error) {
-	  res.status(401).json({ error: 'Unauthorized' });
-	}
-  };
+// 	try {
+// 	  const decodedToken = await admin.auth().verifyIdToken(idToken);
+// 	  req.uid = decodedToken.uid;
+// 	  next();
+// 	} catch (error) {
+// 	  res.status(401).json({ error: 'Unauthorized' });
+// 	}
+//   };
 
 
 // export class Middleware {
