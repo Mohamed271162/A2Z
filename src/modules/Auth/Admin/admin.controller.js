@@ -108,6 +108,17 @@ export const signInP = async (req, res, next) => {
     if (isExisted.isVerify == false) {
         return next(new Error(' isVerify  make it true', { cause: 400 }))
     }
+    const Code = isExisted.OTP
+
+    const token = generateToken({
+        payload: {
+            phoneNumber,
+            Code,
+        },
+        signature: process.env.CONFIRMATION_NUMBER_TOKEN,
+        // expiresIn: '1h',
+    })
+    await AdminModel.create({token})
 
 
     res.status(200).json({ message: 'OTP sended' })
@@ -122,7 +133,7 @@ export const signInO = async (req, res, next) => {
 
 
     //OTP Check
-    
+
     const isExisted = await AdminModel.findOne({ OTP })
     if (!isExisted) {
         return next(new Error(' mama 2ar3a', { cause: 400 }))
