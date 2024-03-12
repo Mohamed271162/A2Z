@@ -70,6 +70,11 @@ export const SignUp = async (req, res, next) => {
     if (isPhoneDuplicate) {
         return next(new Error('phone is already exist', { cause: 400 }))
     }
+
+    const isEmailDuplicate = await AdminModel.findOne({ email})
+    if (isEmailDuplicate) {
+        return next(new Error('email is already exist', { cause: 400 }))
+    }
     // const token = generateToken({
     //     payload: {
     //         phoneNumber,
