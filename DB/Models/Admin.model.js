@@ -16,8 +16,7 @@ const EngineerSchema = new Schema(
         },
         OTP: {
             type: String,
-            required: true,
-            unique: true,
+            // unique: true,
         },
         isVerify: {
             type: Boolean,

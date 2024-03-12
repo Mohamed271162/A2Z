@@ -52,7 +52,7 @@ import pkg from 'bcrypt'
 import { generateToken } from "../../../utils/tokenFunctions.js"
 import { customAlphabet } from "nanoid"
 import { paginationFunction } from "../../../utils/pagination.js"
-const nanoid = customAlphabet('12345_abcdjfh', 5)
+const nanoid = customAlphabet('1234567890', 6)
 
 export const SignUp = async (req, res, next) => {
     const { phoneNumber,
@@ -105,59 +105,64 @@ export const signInP = async (req, res, next) => {
         return next(new Error(' Not  Found', { cause: 400 }))
     }
 
-    if (isExisted.isVerify == false) {
-        return next(new Error(' isVerify  make it true', { cause: 400 }))
-    }
-    const Code = isExisted.OTP
-
-    const token = generateToken({
-        payload: {
-            phoneNumber,
-            Code,
-        },
-        signature: process.env.CONFIRMATION_NUMBER_TOKEN,
-        // expiresIn: '1h',
+    // if (isExisted.isVerify == false) {
+    //     return next(new Error(' isVerify  make it true', { cause: 400 }))
+    // }
+    const OTPcode = nanoid()
+    const isEmailSent = sendEmailService({
+        to: isExisted.email,
+        subject: 'Confirmation OTP',
+        // message: <a href=${conirmationlink}>Click here to confirm </a>,
+        message: `${OTPcode}`
     })
-    await AdminModel.create({token})
-
-
-    res.status(200).json({ message: 'OTP sended' })
-}
-
-export const signInO = async (req, res, next) => {
-
-    const {
-
-        OTP
-    } = req.body
-
-
-    //OTP Check
-
-    const isExisted = await AdminModel.findOne({ OTP })
-    if (!isExisted) {
-        return next(new Error(' mama 2ar3a', { cause: 400 }))
+    if (!isEmailSent) {
+        return next(new Error('fail to sent confirmation email', { cause: 400 }))
     }
-    const token = generateToken({
-        payload: {
-            OTP,
-            id: isExisted._id,
-        },
-        signature: process.env.SIGN_IN_TOKEN_SECRET,
-    })
-
-    const adminUpdated = await AdminModel.findOneAndUpdate(
-        { OTP },
+    const adminOtpUpdate = await AdminModel.findOneAndUpdate(
         {
-            token,
-            status: 'Online',
+            phoneNumber
+        },
+        {
+            OTP: OTPcode
         },
         {
             new: true,
         },)
+    if (!adminOtpUpdate) {
+        return next(new Error('Failed Update OTP', { cause: 400 }))
+    }
 
 
-    res.status(200).json({ message: 'loggin Done', adminUpdated })
+    res.status(200).json({ message: 'OTP sended', adminOtpUpdate })
+}
+
+export const signInO = async (req, res, next) => {
+    const { OTP , phoneNumber } = req.body
+
+    const admin = await AdminModel.findOne({
+        phoneNumber
+    })
+    if (!admin) {
+        return next(
+            new Error('Admin Not Found , try again', {
+                cause: 400,
+            }),
+        )
+    }
+    //OTP Check
+
+    if (admin.OTP.toString() !== OTP.toString()) {
+        return next(new Error(' In-valid OTP', { cause: 400 }))
+    }
+    // const token = generateToken({
+    //     payload: {
+    //         OTP,
+    //         id: isExisted._id,
+    //     },
+    //     signature: process.env.SIGN_IN_TOKEN_SECRET,
+    // })
+
+    res.status(200).json({ message: 'loggin Done' })
 }
 
 export const updateProfile = async (req, res, next) => {
@@ -330,7 +335,7 @@ export const deleteEng = async (req, res, next) => {
     if (!engExists) {
         return next(new Error('invalid engineerId', { cause: 400 }))
     }
-    await EngineerModel.deleteOne({engExists})
+    await EngineerModel.deleteOne({ engExists })
     engExists.deletedBy = id
     // //Cloudinary
     // await cloudinary.api.delete_all_resources(
