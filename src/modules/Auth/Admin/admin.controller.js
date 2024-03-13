@@ -121,7 +121,7 @@ export const signInP = async (req, res, next) => {
     // if (isExisted.isVerify == false) {
     //     return next(new Error(' isVerify  make it true', { cause: 400 }))
     // }
-    const OTPcode = nanoid()
+    // const OTPcode = nanoid()
     // const isEmailSent = sendEmailService({
     //     to: isExisted.email,
     //     subject: 'Confirmation OTP',
@@ -131,22 +131,22 @@ export const signInP = async (req, res, next) => {
     // if (!isEmailSent) {
     //     return next(new Error('fail to sent confirmation email', { cause: 400 }))
     // }
-    const adminOtpUpdate = await AdminModel.findOneAndUpdate(
-        {
-            phoneNumber
-        },
-        {
-            OTP: OTPcode
-        },
-        {
-            new: true,
-        },)
-    if (!adminOtpUpdate) {
-        return next(new Error('Failed Update OTP', { cause: 400 }))
-    }
+    // const adminOtpUpdate = await AdminModel.findOneAndUpdate(
+    //     {
+    //         phoneNumber
+    //     },
+    //     {
+    //         OTP: OTPcode
+    //     },
+    //     {
+    //         new: true,
+    //     },)
+    // if (!adminOtpUpdate) {
+    //     return next(new Error('Failed Update OTP', { cause: 400 }))
+    // }
 
 
-    res.status(200).json({ message: 'OTP sended', adminOtpUpdate })
+    res.status(200).json({ message: 'OTP sended'})
 }
  
 export const signInO = async (req, res, next) => {
