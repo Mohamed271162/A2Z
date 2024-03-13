@@ -75,6 +75,12 @@ export const SignUp = async (req, res, next) => {
     if (isEmailDuplicate) {
         return next(new Error('email is already exist', { cause: 400 }))
     }
+
+
+    const isOTPDuplicate = await AdminModel.findOne({ OTP})
+    if (isOTPDuplicate) {
+        return next(new Error('OTP Duplicated', { cause: 400 }))
+    }
     // const token = generateToken({
     //     payload: {
     //         phoneNumber,
@@ -116,15 +122,15 @@ export const signInP = async (req, res, next) => {
     //     return next(new Error(' isVerify  make it true', { cause: 400 }))
     // }
     const OTPcode = nanoid()
-    const isEmailSent = sendEmailService({
-        to: isExisted.email,
-        subject: 'Confirmation OTP',
-        // message: <a href=${conirmationlink}>Click here to confirm </a>,
-        message: `${OTPcode}`
-    })
-    if (!isEmailSent) {
-        return next(new Error('fail to sent confirmation email', { cause: 400 }))
-    }
+    // const isEmailSent = sendEmailService({
+    //     to: isExisted.email,
+    //     subject: 'Confirmation OTP',
+    //     // message: <a href=${conirmationlink}>Click here to confirm </a>,
+    //     message: `${OTPcode}`
+    // })
+    // if (!isEmailSent) {
+    //     return next(new Error('fail to sent confirmation email', { cause: 400 }))
+    // }
     const adminOtpUpdate = await AdminModel.findOneAndUpdate(
         {
             phoneNumber
@@ -142,7 +148,7 @@ export const signInP = async (req, res, next) => {
 
     res.status(200).json({ message: 'OTP sended', adminOtpUpdate })
 }
-
+ 
 export const signInO = async (req, res, next) => {
     const { OTP , phoneNumber } = req.body
 
