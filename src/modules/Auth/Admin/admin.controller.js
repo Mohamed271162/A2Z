@@ -70,6 +70,17 @@ export const SignUp = async (req, res, next) => {
     if (isPhoneDuplicate) {
         return next(new Error('phone is already exist', { cause: 400 }))
     }
+
+    const isEmailDuplicate = await AdminModel.findOne({ email})
+    if (isEmailDuplicate) {
+        return next(new Error('email is already exist', { cause: 400 }))
+    }
+
+
+    const isOTPDuplicate = await AdminModel.findOne({ OTP})
+    if (isOTPDuplicate) {
+        return next(new Error('OTP Duplicated', { cause: 400 }))
+    }
     // const token = generateToken({
     //     payload: {
     //         phoneNumber,
@@ -110,34 +121,34 @@ export const signInP = async (req, res, next) => {
     // if (isExisted.isVerify == false) {
     //     return next(new Error(' isVerify  make it true', { cause: 400 }))
     // }
-    const OTPcode = nanoid()
-    const isEmailSent = sendEmailService({
-        to: isExisted.email,
-        subject: 'Confirmation OTP',
-        // message: <a href=${conirmationlink}>Click here to confirm </a>,
-        message: `${OTPcode}`
-    })
-    if (!isEmailSent) {
-        return next(new Error('fail to sent confirmation email', { cause: 400 }))
-    }
-    const adminOtpUpdate = await AdminModel.findOneAndUpdate(
-        {
-            phoneNumber
-        },
-        {
-            OTP: OTPcode
-        },
-        {
-            new: true,
-        },)
-    if (!adminOtpUpdate) {
-        return next(new Error('Failed Update OTP', { cause: 400 }))
-    }
+    // const OTPcode = nanoid()
+    // const isEmailSent = sendEmailService({
+    //     to: isExisted.email,
+    //     subject: 'Confirmation OTP',
+    //     // message: <a href=${conirmationlink}>Click here to confirm </a>,
+    //     message: `${OTPcode}`
+    // })
+    // if (!isEmailSent) {
+    //     return next(new Error('fail to sent confirmation email', { cause: 400 }))
+    // }
+    // const adminOtpUpdate = await AdminModel.findOneAndUpdate(
+    //     {
+    //         phoneNumber
+    //     },
+    //     {
+    //         OTP: OTPcode
+    //     },
+    //     {
+    //         new: true,
+    //     },)
+    // if (!adminOtpUpdate) {
+    //     return next(new Error('Failed Update OTP', { cause: 400 }))
+    // }
 
 
-    res.status(200).json({ message: 'OTP sended', adminOtpUpdate })
+    res.status(200).json({ message: 'OTP sended'})
 }
-
+ 
 export const signInO = async (req, res, next) => {
     const { OTP , phoneNumber } = req.body
 
