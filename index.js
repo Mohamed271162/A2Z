@@ -8,3 +8,4 @@ config({ path: path.resolve('./config/config.env') })
 const app = express()
 
 initiatApp(app, express)
+  

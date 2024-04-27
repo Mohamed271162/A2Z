@@ -15,7 +15,8 @@ app.get('/', (req, res) => res.send('Hello World!'))
 // app.use(middleware.decodeToken)
 app.use('/engineer',routers.engineerRouter)
 app.use('/admin',routers.adminRouter)
-app.use(routers.adminRouter)
+app.use('/user',routers.userRouter)
+
 
 
 
