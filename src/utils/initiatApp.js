@@ -2,6 +2,9 @@ import { connectionDB } from "../../DB/connection.js"
 import { globalResponse } from "./errorhandling.js"
 import * as routers from '../modules/index.routes.js'
 import cors from 'cors'
+import { Server } from "socket.io"
+
+
 // import middleware from '../middlewares/firebase.middleware.js'
 
 export const initiatApp = (app,express)=>{
@@ -24,6 +27,16 @@ res.status(404).json({ message: '404 Not Found URL' }),
 )
 
 app.use(globalResponse)
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+
+const httpServer = app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+
+const io = new Server(httpServer, {
+    cors: '*'
+})
+io.on('connection', (socket) => {
+    console.log({ socketId: socket.id });
+
+    socket.emit('backtofront', 'Hello From back')
+})
 
 }
