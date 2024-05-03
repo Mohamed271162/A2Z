@@ -1,4 +1,4 @@
-//mama @ar3a
+// ay kalam 
 // // Send OTP endpoint 
 
 
@@ -213,6 +213,7 @@ export const updateProfile = async (req, res, next) => {
 
 export const addEngineer = async (req, res, next) => {
     const {
+        // update firstname AND Lastname
         userName,
         email,
         password,
