@@ -1,4 +1,18 @@
 import { Router } from 'express'
+// import { multerCloudFunction } from '../../services/multerCloud.js'
+// import { allowedExtensions } from '../../utils/allowedExtensions.js'
+// import { asyncHandler } from '../../utils/errorhandling.js'
+// import * as cc from './category.controller.js'
+// import { validationCoreFunction } from '../../../middlewares/validation.js'
+// import * as validators from './category.validationSchemas.js'
+
 const router = Router()
 
+
+// router.post(
+//   '/',
+//   multerCloudFunction(allowedExtensions.Image).single('image'),
+//   validationCoreFunction(validators.createCategorySchema),
+//   asyncHandler(cc.createCategory),
+// )
 export default router
