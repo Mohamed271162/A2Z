@@ -6,7 +6,6 @@ import { multerCloudFunction } from '../../../services/multerCloud.js'
 import { allowedExtensions } from '../../../utils/allowedExtensions.js'
 import { isAuth } from '../../../middlewares/auth.eng.js'
 import { validationCoreFunction } from '../../../middlewares/validation.js'
-import { SignInSchema } from './eng.validationSchema.js'
 
 router.post('/',multerCloudFunction(allowedExtensions.Image).single('image'), asyncHandler(ec.signUp))
 router.get('/confirm/:token', asyncHandler(ec.confirmEmail))
