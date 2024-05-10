@@ -146,3 +146,4 @@ export const createCategory = async (req, res, next) => {
     if (!categoryExists) {
       return next(new Error('invalid categoryId', { cause: 400 }))
     }
+}
