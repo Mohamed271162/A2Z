@@ -16,7 +16,7 @@ export const SignUp = async (req, res, next) => {
         return next(new Error('email is already exist', { cause: 400 }))
     }
 
-    if (password.toString()!==Repass.toString()){
+    if (password!==Repass){
         return next(new Error('password and repass not identical', { cause: 400 }))
     }
 
