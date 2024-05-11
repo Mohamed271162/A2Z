@@ -27,6 +27,9 @@ const userSchema = new Schema(
             enum: ['Online', 'Offline'],
         },
 
+        token:String,
+        customId:String,
+
 
     },
     { timestamps: true },
