@@ -26,6 +26,11 @@ const userSchema = new Schema(
             default: 'Offline',
             enum: ['Online', 'Offline'],
         },
+        
+        isConfirmed: {
+            type: Boolean,
+            default: false,
+        },
 
         token:String,
         customId:String,

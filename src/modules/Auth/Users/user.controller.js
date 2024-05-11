@@ -1,6 +1,8 @@
 import { UserModel } from "../../../../DB/Models/user.model.js"
 import pkg from 'bcrypt'
-import { generateToken } from "../../../utils/tokenFunctions.js"
+import { generateToken, verifyToken } from "../../../utils/tokenFunctions.js"
+import { sendEmailService } from "../../../services/sendEmailService.js"
+import { emailTemplate } from "../../../utils/emailTemplate.js"
 
 export const SignUp = async (req, res, next) => {
     const { userName,
@@ -9,16 +11,40 @@ export const SignUp = async (req, res, next) => {
         Repass,
     } = req.body
 
-
-
+    
+    
     const isEmailDuplicate = await UserModel.findOne({ email})
     if (isEmailDuplicate) {
         return next(new Error('email is already exist', { cause: 400 }))
     }
-
+    
     if (password!==Repass){
         return next(new Error('password and repass not identical', { cause: 400 }))
     }
+    const token = generateToken({
+        payload: {
+            email,
+        },
+        signature: process.env.CONFIRMATION_EMAIL_TOKEN,
+        // expiresIn: '1h',
+    })
+    const conirmationlink = `${req.protocol}://${req.headers.host}/User/confirm/${token}`
+    const isEmailSent = sendEmailService({
+        to: email,
+        subject: 'Confirmation Email',
+        // message: `<a href=${conirmationlink}>Click here to confirm </a>`,
+        message: emailTemplate({
+            link: conirmationlink,
+            linkData: 'Click here to confirm',
+            subject: 'Confirmation Email',
+        }),
+    })
+
+
+    if (!isEmailSent) {
+        return next(new Error('fail to sent confirmation email', { cause: 400 }))
+    }
+    const hashedPassword = pkg.hashSync(password, +process.env.SALT_ROUND)
 
 
     const objUser = new UserModel({
@@ -26,13 +52,30 @@ export const SignUp = async (req, res, next) => {
         
         userName,
         email,
-        password,
-        Repass,
+        password:hashedPassword,
 
     })
     const saveUser= await objUser.save()
     res.status(201).json({ message: 'Done', saveUser })
 }
+
+export const confirmEmail = async (req, res, next) => {
+    const { token } = req.params
+    const decode = verifyToken({
+        token,
+        signature: process.env.CONFIRMATION_EMAIL_TOKEN,
+    })
+    const user = await UserModel.findOneAndUpdate(
+        { email: decode?.email, isConfirmed: false },
+        { isConfirmed: true },
+        { new: true },
+    )
+    if (!user) {
+        return next(new Error('already confirmed', { cause: 400 }))
+    }
+    res.status(200).json({ messge: 'Confirmed done, please try to login' })
+}
+
 
 export const logIn = async (req, res, next) => {
     const { email, password } = req.body
@@ -65,3 +108,24 @@ export const logIn = async (req, res, next) => {
     )
     res.status(200).json({ messge: 'Login done', userUpdated })
 }
+
+export const getAllUser = async (req, res, next) => {
+
+    // const { id } = req.query
+    const user = await UserModel.find()
+    if (user) {
+        return res.status(200).json({ message: 'done', user })
+    }
+    res.status(404).json({ message: 'in-valid Id' })
+}
+
+export const getUserAccount = async (req, res, next) => {
+
+    const { id } = req.authClient
+    const user = await UserModel.findById(id)
+    if (user) {
+        return res.status(200).json({ message: 'done', user })
+    }
+    res.status(404).json({ message: 'in-valid Id' })
+}
+
