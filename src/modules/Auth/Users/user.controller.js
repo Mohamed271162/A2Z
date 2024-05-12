@@ -53,7 +53,6 @@ export const SignUp = async (req, res, next) => {
         userName,
         email,
         password:hashedPassword,
-
     })
     const saveUser= await objUser.save()
     res.status(201).json({ message: 'Done', saveUser })

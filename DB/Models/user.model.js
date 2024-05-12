@@ -18,7 +18,6 @@ const userSchema = new Schema(
         },
         Repass: {
             type: String,
-            required: true,
         },
 
         status: {
@@ -26,7 +25,7 @@ const userSchema = new Schema(
             default: 'Offline',
             enum: ['Online', 'Offline'],
         },
-        
+
         isConfirmed: {
             type: Boolean,
             default: false,
