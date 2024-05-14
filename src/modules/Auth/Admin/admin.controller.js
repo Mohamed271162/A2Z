@@ -81,13 +81,13 @@ export const SignUp = async (req, res, next) => {
     if (isOTPDuplicate) {
         return next(new Error('OTP Duplicated', { cause: 400 }))
     }
-    // const token = generateToken({
-    //     payload: {
-    //         phoneNumber,
-    //     },
-    //     signature: process.env.CONFIRMATION_NUMBER_TOKEN,
-    //     // expiresIn: '1h',
-    // })
+    const token = generateToken({
+        payload: {
+            phoneNumber,
+        },
+        signature: process.env.CONFIRMATION_NUMBER_TOKEN,
+        // expiresIn: '1h',
+    })
 
     const objAdmin = new AdminModel({
         phoneNumber,
@@ -96,6 +96,7 @@ export const SignUp = async (req, res, next) => {
         email,
         age,
         gender,
+        token,
 
     })
     const saveAdmin = await objAdmin.save()
