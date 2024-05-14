@@ -176,7 +176,7 @@ export const signInO = async (req, res, next) => {
     //     signature: process.env.SIGN_IN_TOKEN_SECRET,
     // })
 
-    res.status(200).json({ message: 'loggin Done' },admin)
+    res.status(200).json({ message: 'loggin Done',admin })
 }
 
 export const updateProfile = async (req, res, next) => {
