@@ -16,6 +16,22 @@ router.get('/getengby',asyncHandler(ac.getEngBy))
 router.put('/:engId',isAuthAdmin(),multerCloudFunction(allowedExtensions.Image).single('image'),asyncHandler(ac.updateEng))
 router.delete('/:engId',isAuthAdmin(),asyncHandler(ac.deleteEng))
 router.get('/logOut',isAuthAdmin(),asyncHandler(ac.logOut))
+router.post(
+    '/addproduct',
+    multerCloudFunction(allowedExtensions.Image).array('image', 10),
+    // validationCoreFunction(validators.addProductSchema),
+    asyncHandler(ac.addProduct),
+  )
+  router.put(
+    '/updateproduct',
+    multerCloudFunction(allowedExtensions.Image).array('image', 10),
+    // validationCoreFunction(validators.updateProductSchema),
+    asyncHandler(ac.updateProduct),
+  )
+  router.delete('/deleteproduct', asyncHandler(ac.deleteProduct))
+
+
+
 
 
 
