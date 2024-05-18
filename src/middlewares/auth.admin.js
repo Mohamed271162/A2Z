@@ -10,7 +10,7 @@ export const isAuthAdmin = () => {
         return next(new Error('Please login first', { cause: 400 }))
       }
 
-      if (!authorization.startsWith('Saraha')) {
+      if (!authorization.startsWith('a2z')) {
         return next(new Error('invalid token prefix', { cause: 400 }))
       }
 
@@ -24,7 +24,6 @@ export const isAuthAdmin = () => {
         
         const findAdmin = await AdminModel.findById(
           decodedData.id,
-          'email username',
         )
         if (!findAdmin) {
           return next(new Error('Please SignUp', { cause: 400 }))
@@ -42,8 +41,8 @@ export const isAuthAdmin = () => {
           // generate new token
           const adminToken = generateToken({
             payload: {
-              OTP: admin.OTP,
-              id: admin._id,
+              OTP: Admin.OTP,
+              id: Admin._id,
             },
             signature: process.env.SIGN_IN_TOKEN_SECRET,
             
@@ -61,6 +60,7 @@ export const isAuthAdmin = () => {
           await Admin.save()
           return res.status(200).json({ message: 'Token refreshed', adminToken })
         }
+        console.log(error);
         return next(new Error('invalid token', { cause: 500 }))
       }
     } catch (error) {

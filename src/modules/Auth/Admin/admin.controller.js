@@ -56,6 +56,7 @@ import { customAlphabet } from "nanoid"
 import { paginationFunction } from "../../../utils/pagination.js"
 import { categoryModel } from "../../../../DB/Models/Category.model.js"
 import { productModel } from "../../../../DB/Models/Product.model.js"
+import slugify from "slugify"
 const nanoid = customAlphabet('1234567890', 6)
 
 export const SignUp = async (req, res, next) => {
@@ -83,13 +84,15 @@ export const SignUp = async (req, res, next) => {
     if (isOTPDuplicate) {
         return next(new Error('OTP Duplicated', { cause: 400 }))
     }
-    const token = generateToken({
-        payload: {
-            phoneNumber,
-        },
-        signature: process.env.CONFIRMATION_NUMBER_TOKEN,
-        // expiresIn: '1h',
-    })
+    // const token = generateToken({
+    //     payload: {
+    //         OTP,
+            
+
+    //     },
+    //     signature: process.env.SIGN_IN_TOKEN_SECRET,
+    //     // expiresIn: '1h',
+    // })
 
     const objAdmin = new AdminModel({
         phoneNumber,
@@ -98,7 +101,6 @@ export const SignUp = async (req, res, next) => {
         email,
         age,
         gender,
-        token,
 
     })
     const saveAdmin = await objAdmin.save()
@@ -170,15 +172,26 @@ export const signInO = async (req, res, next) => {
     if (admin.OTP.toString() !== OTP.toString()) {
         return next(new Error(' In-valid OTP', { cause: 400 }))
     }
-    // const token = generateToken({
-    //     payload: {
-    //         OTP,
-    //         id: isExisted._id,
-    //     },
-    //     signature: process.env.SIGN_IN_TOKEN_SECRET,
-    // })
+    const token = generateToken({
+        payload: {
+            OTP,
+            id: admin._id,
+        },
+        signature: process.env.SIGN_IN_TOKEN_SECRET,
+    })
 
-    res.status(200).json({ message: 'loggin Done',admin })
+    const adminUpdated = await AdminModel.findOneAndUpdate(
+      { phoneNumber },
+      {
+          token,
+          status: 'Online',
+      },
+      {
+          new: true,
+      },
+  )
+
+    res.status(200).json({ message: 'loggin Done',adminUpdated })
 }
 
 export const updateProfile = async (req, res, next) => {
@@ -529,5 +542,59 @@ export const addProduct = async (req, res, next) => {
       return next(new Error('invalid product id', { cause: 400 }))
     }
     res.status(200).json({ message: 'Done', product })
+  }
+
+
+
+  export const addCategory=async(req,res,next)=>{
+    const { id } = req.query
+    const { name } = req.body
+    // const slug = slugify(name, '_')
+  
+
+    // if (await AdminModel.findById({ id })) {
+    //     return next(
+    //       new Error('invaild id ', { cause: 400 }),
+    //     )
+    //   }
+    if (await categoryModel.findOne({ name })) {
+      return next(
+        new Error('please enter different category name', { cause: 400 }),
+      )
+    }
+  
+    // if (!req.file) {
+    //   return next(new Error('please upload a category image', { cause: 400 }))
+    // }
+  
+    // host
+    // const customId = nanoid()
+    // const { secure_url, public_id } = await cloudinary.uploader.upload(
+    //   req.file.path,
+    //   {
+    //     folder: `${process.env.PROJECT_FOLDER}/Categories/${customId}`,
+    //   },
+    // )
+  
+    const categoryObject = {
+      name,
+      slug,
+    //   Image: {
+    //     secure_url,
+    //     public_id,
+    //   },
+      customId,
+      createdBy: id,
+    }
+  
+    const category = await categoryModel.create(categoryObject)
+    if (!category) {
+      await cloudinary.uploader.destroy(public_id)
+      return next(
+        new Error('try again later , fail to add your category', { cause: 400 }),
+      )
+    }
+  
+    res.status(200).json({ message: 'Added Done', category })
   }
   
