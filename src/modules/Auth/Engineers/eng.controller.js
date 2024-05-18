@@ -1,5 +1,4 @@
 
-import { AdminModel } from '../../../../DB/Models/Admin.model.js'
 import { EngineerModel } from '../../../../DB/Models/Engineer.model.js'
 import { sendEmailService } from '../../../services/sendEmailService.js'
 import cloudinary from '../../../utils/coludinaryConfigrations.js'
@@ -217,10 +216,6 @@ export const getEngAccount = async (req, res, next) => {
 
 export const profilePic = async (req, res, next) => {
     const { id } = req.authUser
-    const admin = await AdminModel.findById(id);
-    if (!admin) {
-        return res.status(404).json({ error: 'admmin not found' });
-    }
 
     if (!req.file) {
         return next(new Error('please upload pictures', { cause: 400 }))

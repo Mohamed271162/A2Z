@@ -298,7 +298,10 @@ export const getAll = async (req, res, next) => {
     // const { page, size } = req.query
     // const { limit, skip } = paginationFunction({ page, size })
     const { id } = req.authAdmin
-
+    const admin = await AdminModel.findById(id);
+    if (!admin) {
+        return res.status(404).json({ error: 'admin not found' });
+    }
 
 
     const Engs = await EngineerModel.find()
