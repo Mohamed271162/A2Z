@@ -197,28 +197,35 @@ export const signInO = async (req, res, next) => {
 
 export const updateProfile = async (req, res, next) => {
     const { 
+
+      email,
         userName,
         age,
         gender,
-        phone,
+        // phone,
+        
 
     } = req.body
+    const { id } = req.authAdmin
+
+ 
 
     // const { id } = req.authAdmin
-    const customId = nanoid()
-    const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
-        folder: `${process.env.PROJECT_FOLDER}/Admin/ProfilePic/${customId}`,
-        resource_type: 'image'
-    })
+    // const customId = nanoid()
+    // const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
+    //     folder: `${process.env.PROJECT_FOLDER}/Admin/ProfilePic/${customId}`,
+    //     resource_type: 'image'
+    // })
     const admin = await AdminModel.findByIdAndUpdate(id, {
-        profilePic: {
-            secure_url,
-            public_id,
-        },
+        // profilePic: {
+        //     secure_url,
+        //     public_id,
+        // },
+        email,
         userName,
         age,
         gender,
-        phone,
+        // phone,
     },
         {
             new: true,
@@ -233,6 +240,7 @@ export const updateProfile = async (req, res, next) => {
 export const getadminaccount = async (req, res, next) => {
 
   const { id } = req.authAdmin
+
   const user = await AdminModel.findById(id)
   if (user) {
       return res.status(200).json({ message: 'done', user })

@@ -10,7 +10,7 @@ const router = Router()
 router.post('/signup', asyncHandler(ac.SignUp))
 router.post('/phonenumber', asyncHandler(ac.signInP))
 router.post('/OTP', asyncHandler(ac.signInO))
-router.put('/', isAuthAdmin(), multerCloudFunction(allowedExtensions.Image).single('image'), asyncHandler(ac.updateProfile))
+router.put('/updateadminprofile', isAuthAdmin(), asyncHandler(ac.updateProfile))
 router.post('/addengineer',isAuthAdmin(),asyncHandler(ac.addEngineer))
 
 router.get('/getengbyid',isAuthAdmin(), asyncHandler(ac.getEngBy))
