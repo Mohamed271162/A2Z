@@ -14,6 +14,7 @@ router.put('/', isAuthAdmin(), multerCloudFunction(allowedExtensions.Image).sing
 router.post('/addengineer',isAuthAdmin(),asyncHandler(ac.addEngineer))
 
 router.get('/getengbyid',isAuthAdmin(), asyncHandler(ac.getEngBy))
+router.get('/getadmininfo',isAuthAdmin(), asyncHandler(ac.getadminaccount))
 
 router.get('/getalleng',isAuthAdmin(), asyncHandler(ac.getAll))
 router.put('/:engId', isAuthAdmin(), multerCloudFunction(allowedExtensions.Image).single('image'), asyncHandler(ac.updateEng))

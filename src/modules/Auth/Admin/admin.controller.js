@@ -229,6 +229,17 @@ export const updateProfile = async (req, res, next) => {
 
 }
 
+
+export const getadminaccount = async (req, res, next) => {
+
+  const { id } = req.authUser
+  const user = await AdminModel.findById(id)
+  if (user) {
+      return res.status(200).json({ message: 'done', user })
+  }
+  res.status(404).json({ message: 'in-valid Id' })
+}
+
 export const addEngineer = async (req, res, next) => {
     const {
         userName,
