@@ -298,12 +298,12 @@ export const getAll = async (req, res, next) => {
     // const { page, size } = req.query
     // const { limit, skip } = paginationFunction({ page, size })
     const { id } = req.authAdmin
-    
 
 
-    const productsc = await productModel.find()
+
+    const Engs = await EngineerModel.find()
     // .limit(limit).skip(skip)
-    res.status(200).json({ message: 'Done', productsc })
+    res.status(200).json({ message: 'Done', Engs })
 }
 
 export const getEngBy = async (req, res, next) => {
