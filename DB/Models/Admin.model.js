@@ -51,10 +51,10 @@ const EngineerSchema = new Schema(
             enum: ['male', 'female', 'Not specified'],
         },
         
-        phone:{
-            type:Number,
-            default:'+20100000000'
-        },
+        // phone:{
+        //     type:Number,
+        //     default:'+20100000000'
+        // },
 
         age: Number,
         token: String,
