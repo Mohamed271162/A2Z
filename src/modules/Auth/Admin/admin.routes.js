@@ -7,7 +7,7 @@ import { Router } from "express";
 const router = Router()
 
 
-router.post('/', asyncHandler(ac.SignUp))
+router.post('/signup', asyncHandler(ac.SignUp))
 router.post('/phonenumber', asyncHandler(ac.signInP))
 router.post('/OTP', asyncHandler(ac.signInO))
 router.put('/', isAuthAdmin(), multerCloudFunction(allowedExtensions.Image).single('image'), asyncHandler(ac.updateProfile))

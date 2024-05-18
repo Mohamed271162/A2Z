@@ -60,7 +60,8 @@ import slugify from "slugify"
 const nanoid = customAlphabet('1234567890', 6)
 
 export const SignUp = async (req, res, next) => {
-    const { phoneNumber,
+    const {
+       phoneNumber,
         OTP,
         userName,
         email,
