@@ -238,6 +238,7 @@ export const addEngineer = async (req, res, next) => {
         gender,
         phoneNumber,
         address,
+        spicalAt
     } = req.body
 
     const { id } = req.authAdmin
@@ -284,6 +285,7 @@ export const addEngineer = async (req, res, next) => {
         gender,
         phoneNumber,
         address,
+        spicalAt,
         addedBy: id,
 
     })
