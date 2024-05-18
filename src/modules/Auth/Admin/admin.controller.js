@@ -297,6 +297,9 @@ export const addEngineer = async (req, res, next) => {
 export const getAll = async (req, res, next) => {
     // const { page, size } = req.query
     // const { limit, skip } = paginationFunction({ page, size })
+    const { id } = req.authAdmin
+    
+
 
     const productsc = await productModel.find()
     // .limit(limit).skip(skip)
