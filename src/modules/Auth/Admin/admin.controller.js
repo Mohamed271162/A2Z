@@ -374,10 +374,11 @@ export const updateEng = async (req, res, next) => {
         return next(new Error('Not Found', { cause: 400 }))
     }
 
-    if(!userName){
-      Eng.userName = userName
+    // if(!userName){
+    //   Eng.userName = userName
 
-    }
+    // }
+    Eng.userName = userName
     
     Eng.password=password
     Eng.age = age
