@@ -209,7 +209,7 @@ export const updateProfile = async (req, res, next) => {
   const { id } = req.authAdmin
 
   if (!req.file) {
-    return next(new Error('please upload a category image', { cause: 400 }))
+    return next(new Error('please upload a Admin pic', { cause: 400 }))
   }
 
   const customId = nanoid()
@@ -222,7 +222,7 @@ export const updateProfile = async (req, res, next) => {
         secure_url,
         public_id,
     },
-    
+
     email,
     userName,
     age,
