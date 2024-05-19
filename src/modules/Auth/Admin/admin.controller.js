@@ -436,8 +436,8 @@ export const logOut = async (req, res, next) => {
   if (userExist._id.toString() !== id.toString()) {
     return next(new Error('can not take this action', { cause: 400 }))
   }
-  await AdminModel.findByIdAndUpdate(id, {
-    status: 'Offline'
+  await AdminModel.findByIdAndDelete(id, {
+    token
   })
   res.json({ message: "log out done" })
 }
