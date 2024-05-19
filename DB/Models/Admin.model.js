@@ -60,6 +60,7 @@ const EngineerSchema = new Schema(
         //     type:Number,
         //     default:'+20100000000'
         // },
+        logoutAt:Date,
 
         age: Number,
         token: String,
