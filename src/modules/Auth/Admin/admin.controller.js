@@ -610,36 +610,36 @@ export const addCategory=async(req,res,next)=>{
     )
   }
 
-  // if (!req.file) {
-  //   return next(new Error('please upload a category image', { cause: 400 }))
-  // }
+  if (!req.file) {
+    return next(new Error('please upload a category image', { cause: 400 }))
+  }
 
-  // const customId = nanoid()
-  // const { secure_url, public_id } = await cloudinary.uploader.upload(
-  //   req.file.path,
-  //   {
-  //     folder: `${process.env.PROJECT_FOLDER}/Categories/${customId}`,
-  //   },
-  // )
+  const customId = nanoid()
+  const { secure_url, public_id } = await cloudinary.uploader.upload(
+    req.file.path,
+    {
+      folder: `${process.env.PROJECT_FOLDER}/Categories/${customId}`,
+    },
+  )
 
   const categoryObject = {
     name,
     slug,
-    // Image: {
-    //   secure_url,
-    //   public_id,
-    // },
-    // customId,
+    Image: {
+      secure_url,
+      public_id,
+    },
+    customId,
     createdBy: id,
   }
 
   const category = await categoryModel.create(categoryObject)
-  // if (!category) {
-  //   await cloudinary.uploader.destroy(public_id)
-  //   return next(
-  //     new Error('try again later , fail to add your category', { cause: 400 }),
-  //   )
-  // }
+  if (!category) {
+    await cloudinary.uploader.destroy(public_id)
+    return next(
+      new Error('try again later , fail to add your category', { cause: 400 }),
+    )
+  }
 
   res.status(200).json({ message: 'Added Done', category })
 }

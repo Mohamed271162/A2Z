@@ -17,11 +17,11 @@ const categorySchema = new Schema(
     Image: {
       secure_url: {
         type: String,
-        // required: true,
+        required: true,
       },
       public_id: {
         type: String,
-        // required: true,
+        required: true,
       },
     },
     createdBy: {
