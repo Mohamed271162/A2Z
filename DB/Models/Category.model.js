@@ -8,12 +8,12 @@ const categorySchema = new Schema(
       lowercase: true,
       required: true,
     },
-    slug: {
-      type: String,
-      unique: true,
-      lowercase: true,
-      // required: true,
-    },
+    // slug: {
+    //   type: String,
+    //   unique: true,
+    //   lowercase: true,
+    //   // required: true,
+    // },
     Image: {
       secure_url: {
         type: String,

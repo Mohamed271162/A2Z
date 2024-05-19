@@ -596,8 +596,8 @@ export const deleteProduct = async (req, res, next) => {
 export const addCategory=async(req,res,next)=>{
   const { id } = req.authAdmin
   const { name } = req.body
-  const slug = slugify(name,{
-    replacement:'_'})
+  // const slug = slugify(name,{
+  //   replacement:'_'})
 
 
   if (!await AdminModel.findById(id)) {
@@ -625,7 +625,7 @@ export const addCategory=async(req,res,next)=>{
   
   const categoryObject = {
     name,
-    slug,
+    // slug,
     Image: {
       secure_url,
       public_id,
