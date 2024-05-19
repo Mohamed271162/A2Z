@@ -20,7 +20,7 @@ router.get('/getalleng',isAuthAdmin(), asyncHandler(ac.getAll))
 
 router.put('/:engId', isAuthAdmin(), multerCloudFunction(allowedExtensions.Image).single('image'), asyncHandler(ac.updateEng))
 router.delete('/delete/:engId', isAuthAdmin(), asyncHandler(ac.deleteEng))
-router.get('/logOut/:userid', isAuthAdmin(), asyncHandler(ac.logOut))
+router.get('/logout/:userid', isAuthAdmin(), asyncHandler(ac.logOut))
 router.post(
   '/addproduct',
   multerCloudFunction(allowedExtensions.Image).array('image', 10),
