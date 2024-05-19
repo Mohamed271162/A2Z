@@ -427,7 +427,7 @@ export const deleteEng = async (req, res, next) => {
 
 export const logOut = async (req, res, next) => {
   const { id } = req.authAdmin
-  const { userid } = req.query
+  const { userid } = req.params
 
   const userExist = await AdminModel.findById(userid)
   if (!userExist) {
