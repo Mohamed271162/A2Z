@@ -362,11 +362,11 @@ export const updateEng = async (req, res, next) => {
 
     const {
         userName,
-
         age,
         gender,
         phoneNumber,
         address,
+        password
     } = req.body
 
     const Eng = await EngineerModel.findById(engId)
@@ -375,7 +375,7 @@ export const updateEng = async (req, res, next) => {
     }
 
     Eng.userName = userName
-
+    Eng.password=password
     Eng.age = age
     Eng.gender = gender
     Eng.phoneNumber = phoneNumber
@@ -586,7 +586,7 @@ export const addProduct = async (req, res, next) => {
 
 
   export const addCategory=async(req,res,next)=>{
-    const { id } = req.query
+    const { id } = req.authAdmin
     const { name } = req.body
     // const slug = slugify(name, '_')
   
