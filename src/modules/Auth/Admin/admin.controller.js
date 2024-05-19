@@ -424,6 +424,7 @@ export const deleteEng = async (req, res, next) => {
   await engExists.save()
   res.status(200).json({ messsage: 'Deleted Done' })
 }
+// when admin logout i want make it offline and delete token cant doing any things when delte token 
 
 export const logOut = async (req, res, next) => {
   const { id } = req.authAdmin
@@ -592,17 +593,17 @@ export const deleteProduct = async (req, res, next) => {
 
 
 
-export const addCategory = async (req, res, next) => {
+export const addCategory=async(req,res,next)=>{
   const { id } = req.authAdmin
   const { name } = req.body
-  // const slug = slugify(name, '_')
+  const slug = slugify(name,'_')
 
 
-  // if (await AdminModel.findById({ id })) {
-  //     return next(
-  //       new Error('invaild id ', { cause: 400 }),
-  //     )
-  //   }
+  if (!await AdminModel.findById(id)) {
+      return next(
+        new Error('invaild id ', { cause: 400 }),
+      )
+    }
   if (await categoryModel.findOne({ name })) {
     return next(
       new Error('please enter different category name', { cause: 400 }),
@@ -613,7 +614,6 @@ export const addCategory = async (req, res, next) => {
   //   return next(new Error('please upload a category image', { cause: 400 }))
   // }
 
-  // host
   // const customId = nanoid()
   // const { secure_url, public_id } = await cloudinary.uploader.upload(
   //   req.file.path,
@@ -625,11 +625,11 @@ export const addCategory = async (req, res, next) => {
   const categoryObject = {
     name,
     slug,
-    //   Image: {
-    //     secure_url,
-    //     public_id,
-    //   },
-    customId,
+    // Image: {
+    //   secure_url,
+    //   public_id,
+    // },
+    // customId,
     createdBy: id,
   }
 
