@@ -12,7 +12,7 @@ const categorySchema = new Schema(
       type: String,
       unique: true,
       lowercase: true,
-      required: true,
+      // required: true,
     },
     Image: {
       secure_url: {

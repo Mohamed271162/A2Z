@@ -39,7 +39,7 @@ router.delete('/deleteproduct', asyncHandler(ac.deleteProduct))
 router.post(
   '/addcategory',
   isAuthAdmin(),
-  // multerCloudFunction(allowedExtensions.Image).single('image'),
+  multerCloudFunction(allowedExtensions.Image).single('image'),
   asyncHandler(ac.addCategory),
 )
 
