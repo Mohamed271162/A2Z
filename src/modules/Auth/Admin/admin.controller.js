@@ -208,19 +208,21 @@ export const updateProfile = async (req, res, next) => {
   } = req.body
   const { id } = req.authAdmin
 
+  if (!req.file) {
+    return next(new Error('please upload a category image', { cause: 400 }))
+  }
 
-
-  // const { id } = req.authAdmin
-  // const customId = nanoid()
-  // const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
-  //     folder: `${process.env.PROJECT_FOLDER}/Admin/ProfilePic/${customId}`,
-  //     resource_type: 'image'
-  // })
+  const customId = nanoid()
+  const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
+      folder: `${process.env.PROJECT_FOLDER}/Admin/ProfilePic/${customId}`,
+      resource_type: 'image'
+  })
   const admin = await AdminModel.findByIdAndUpdate(id, {
-    // profilePic: {
-    //     secure_url,
-    //     public_id,
-    // },
+    profilePic: {
+        secure_url,
+        public_id,
+    },
+    
     email,
     userName,
     age,
@@ -444,6 +446,57 @@ export const logOut = async (req, res, next) => {
 }
 
 
+
+export const addCategory=async(req,res,next)=>{
+  const { id } = req.authAdmin
+  const { name } = req.body
+ 
+
+
+  if (!await AdminModel.findById(id)) {
+      return next(
+        new Error('invaild id ', { cause: 400 }),
+      )
+    }
+  if (await categoryModel.findOne({ name })) {
+    return next(
+      new Error('please enter different category name', { cause: 400 }),
+    )
+  }
+
+  if (!req.file) {
+    return next(new Error('please upload a category image', { cause: 400 }))
+  }
+
+  const customId = nanoid()
+  const { secure_url, public_id } = await cloudinary.uploader.upload(
+    req.file.path,
+    {
+      folder: `${process.env.PROJECT_FOLDER}/Categories/${customId}`,
+    },
+  )
+  
+  const categoryObject = {
+    name,
+    
+    Image: {
+      secure_url,
+      public_id,
+    },
+    customId,
+    createdBy: id,
+  }
+
+  const category = await categoryModel.create(categoryObject)
+  if (!category) {
+    await cloudinary.uploader.destroy(public_id)
+    return next(
+      new Error('try again later , fail to add your category', { cause: 400 }),
+    )
+  }
+  res.status(200).json({ message: 'Added Done', category })
+}
+
 // add product , update , delete 
 
 export const addProduct = async (req, res, next) => {
@@ -592,53 +645,3 @@ export const deleteProduct = async (req, res, next) => {
 }
 
 
-
-export const addCategory=async(req,res,next)=>{
-  const { id } = req.authAdmin
-  const { name } = req.body
- 
-
-
-  if (!await AdminModel.findById(id)) {
-      return next(
-        new Error('invaild id ', { cause: 400 }),
-      )
-    }
-  if (await categoryModel.findOne({ name })) {
-    return next(
-      new Error('please enter different category name', { cause: 400 }),
-    )
-  }
-
-  if (!req.file) {
-    return next(new Error('please upload a category image', { cause: 400 }))
-  }
-
-  const customId = nanoid()
-  const { secure_url, public_id } = await cloudinary.uploader.upload(
-    req.file.path,
-    {
-      folder: `${process.env.PROJECT_FOLDER}/Categories/${customId}`,
-    },
-  )
-  
-  const categoryObject = {
-    name,
-    
-    Image: {
-      secure_url,
-      public_id,
-    },
-    customId,
-    createdBy: id,
-  }
-
-  const category = await categoryModel.create(categoryObject)
-  if (!category) {
-    await cloudinary.uploader.destroy(public_id)
-    return next(
-      new Error('try again later , fail to add your category', { cause: 400 }),
-    )
-  }
-  res.status(200).json({ message: 'Added Done', category })
-}
