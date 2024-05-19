@@ -394,8 +394,8 @@ export const updateEng = async (req, res, next) => {
       folder: `${process.env.PROJECT_FOLDER}/Engineer/ProfilePic/${Eng.customId}`, //new image
     })
 
-    Eng.profilePic ={public_id}
-    Eng.profilePic = {secure_url}
+    Eng.profilePic =public_id
+    Eng.profilePic = secure_url
 
 
   }
