@@ -596,7 +596,8 @@ export const deleteProduct = async (req, res, next) => {
 export const addCategory=async(req,res,next)=>{
   const { id } = req.authAdmin
   const { name } = req.body
-  const slug = slugify(name,'_')
+  const slug = slugify(name,{
+    replacement:'_'})
 
 
   if (!await AdminModel.findById(id)) {
@@ -621,7 +622,7 @@ export const addCategory=async(req,res,next)=>{
       folder: `${process.env.PROJECT_FOLDER}/Categories/${customId}`,
     },
   )
-
+  
   const categoryObject = {
     name,
     slug,
@@ -640,6 +641,5 @@ export const addCategory=async(req,res,next)=>{
       new Error('try again later , fail to add your category', { cause: 400 }),
     )
   }
-
   res.status(200).json({ message: 'Added Done', category })
 }
