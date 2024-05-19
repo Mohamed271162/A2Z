@@ -634,12 +634,12 @@ export const addCategory=async(req,res,next)=>{
   }
 
   const category = await categoryModel.create(categoryObject)
-  if (!category) {
-    await cloudinary.uploader.destroy(public_id)
-    return next(
-      new Error('try again later , fail to add your category', { cause: 400 }),
-    )
-  }
+  // if (!category) {
+  //   await cloudinary.uploader.destroy(public_id)
+  //   return next(
+  //     new Error('try again later , fail to add your category', { cause: 400 }),
+  //   )
+  // }
 
   res.status(200).json({ message: 'Added Done', category })
 }
