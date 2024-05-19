@@ -57,7 +57,6 @@ import { paginationFunction } from "../../../utils/pagination.js"
 import { categoryModel } from "../../../../DB/Models/Category.model.js"
 import { productModel } from "../../../../DB/Models/Product.model.js"
 import slugify from "slugify"
-import admin from "../../../config/firebase-config.js"
 const nanoid = customAlphabet('1234567890', 6)
 
 export const SignUp = async (req, res, next) => {
@@ -394,20 +393,12 @@ export const updateEng = async (req, res, next) => {
         const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
             folder: `${process.env.PROJECT_FOLDER}/Engineer/ProfilePic/${Eng.customId}`, //new image
         })
-        const admin = await EngineerModel.findByIdAndUpdate(engId, {
-          profilePic: {
-              secure_url,
-              public_id,
-          },
-          new: true,
-          
-      })
-      
-        // Eng.profilePic = { secure_url, public_id }
+        
+        Eng.profilePic = { secure_url, public_id }
 
     }
     await Eng.save()
-    res.status(200).json({ messege: 'Done updated', admin})
+    res.status(200).json({ messege: 'Done updated', Eng })
 }
 
 export const deleteEng = async (req, res, next) => {
