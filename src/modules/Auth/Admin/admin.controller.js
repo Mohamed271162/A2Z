@@ -60,179 +60,179 @@ import slugify from "slugify"
 const nanoid = customAlphabet('1234567890', 6)
 
 export const SignUp = async (req, res, next) => {
-    const {
-       phoneNumber,
-        OTP,
-        userName,
-        email,
-        age,
-        gender,
-    } = req.body
+  const {
+    phoneNumber,
+    OTP,
+    userName,
+    email,
+    age,
+    gender,
+  } = req.body
 
-    // phone check
-    const isPhoneDuplicate = await AdminModel.findOne({ phoneNumber })
-    if (isPhoneDuplicate) {
-        return next(new Error('phone is already exist', { cause: 400 }))
-    }
+  // phone check
+  const isPhoneDuplicate = await AdminModel.findOne({ phoneNumber })
+  if (isPhoneDuplicate) {
+    return next(new Error('phone is already exist', { cause: 400 }))
+  }
 
-    const isEmailDuplicate = await AdminModel.findOne({ email})
-    if (isEmailDuplicate) {
-        return next(new Error('email is already exist', { cause: 400 }))
-    }
+  const isEmailDuplicate = await AdminModel.findOne({ email })
+  if (isEmailDuplicate) {
+    return next(new Error('email is already exist', { cause: 400 }))
+  }
 
 
-    const isOTPDuplicate = await AdminModel.findOne({ OTP})
-    if (isOTPDuplicate) {
-        return next(new Error('OTP Duplicated', { cause: 400 }))
-    }
-    // const token = generateToken({
-    //     payload: {
-    //         OTP,
-            
+  const isOTPDuplicate = await AdminModel.findOne({ OTP })
+  if (isOTPDuplicate) {
+    return next(new Error('OTP Duplicated', { cause: 400 }))
+  }
+  // const token = generateToken({
+  //     payload: {
+  //         OTP,
 
-    //     },
-    //     signature: process.env.SIGN_IN_TOKEN_SECRET,
-    //     // expiresIn: '1h',
-    // })
 
-    const objAdmin = new AdminModel({
-        phoneNumber,
-        OTP,
-        userName,
-        email,
-        age,
-        gender,
+  //     },
+  //     signature: process.env.SIGN_IN_TOKEN_SECRET,
+  //     // expiresIn: '1h',
+  // })
 
-    })
-    const saveAdmin = await objAdmin.save()
-    res.status(201).json({ message: 'Done', saveAdmin })
+  const objAdmin = new AdminModel({
+    phoneNumber,
+    OTP,
+    userName,
+    email,
+    age,
+    gender,
+
+  })
+  const saveAdmin = await objAdmin.save()
+  res.status(201).json({ message: 'Done', saveAdmin })
 }
 
 
 export const signInP = async (req, res, next) => {
 
-    const {
+  const {
 
-        phoneNumber
+    phoneNumber
 
-    } = req.body
-
-
-    //phoneNum Check
-    const isExisted = await AdminModel.findOne({ phoneNumber })
-    if (!isExisted) {
-        return next(new Error(' Not  Found', { cause: 400 }))
-    }
-
-    // if (isExisted.isVerify == false) {
-    //     return next(new Error(' isVerify  make it true', { cause: 400 }))
-    // }
-    // const OTPcode = nanoid()
-    // const isEmailSent = sendEmailService({
-    //     to: isExisted.email,
-    //     subject: 'Confirmation OTP',
-    //     // message: <a href=${conirmationlink}>Click here to confirm </a>,
-    //     message: `${OTPcode}`
-    // })
-    // if (!isEmailSent) {
-    //     return next(new Error('fail to sent confirmation email', { cause: 400 }))
-    // }
-    // const adminOtpUpdate = await AdminModel.findOneAndUpdate(
-    //     {
-    //         phoneNumber
-    //     },
-    //     {
-    //         OTP: OTPcode
-    //     },
-    //     {
-    //         new: true,
-    //     },)
-    // if (!adminOtpUpdate) {
-    //     return next(new Error('Failed Update OTP', { cause: 400 }))
-    // }
+  } = req.body
 
 
-    res.status(200).json({ message: 'OTP sended'})
+  //phoneNum Check
+  const isExisted = await AdminModel.findOne({ phoneNumber })
+  if (!isExisted) {
+    return next(new Error(' Not  Found', { cause: 400 }))
+  }
+
+  // if (isExisted.isVerify == false) {
+  //     return next(new Error(' isVerify  make it true', { cause: 400 }))
+  // }
+  // const OTPcode = nanoid()
+  // const isEmailSent = sendEmailService({
+  //     to: isExisted.email,
+  //     subject: 'Confirmation OTP',
+  //     // message: <a href=${conirmationlink}>Click here to confirm </a>,
+  //     message: `${OTPcode}`
+  // })
+  // if (!isEmailSent) {
+  //     return next(new Error('fail to sent confirmation email', { cause: 400 }))
+  // }
+  // const adminOtpUpdate = await AdminModel.findOneAndUpdate(
+  //     {
+  //         phoneNumber
+  //     },
+  //     {
+  //         OTP: OTPcode
+  //     },
+  //     {
+  //         new: true,
+  //     },)
+  // if (!adminOtpUpdate) {
+  //     return next(new Error('Failed Update OTP', { cause: 400 }))
+  // }
+
+
+  res.status(200).json({ message: 'OTP sended' })
 }
- 
+
 export const signInO = async (req, res, next) => {
-    const { OTP , phoneNumber } = req.body
+  const { OTP, phoneNumber } = req.body
 
-    const admin = await AdminModel.findOne({
-        phoneNumber
-    })
-    if (!admin) {
-        return next(
-            new Error('Admin Not Found , try again', {
-                cause: 400,
-            }),
-        )
-    }
-    //OTP Check
+  const admin = await AdminModel.findOne({
+    phoneNumber
+  })
+  if (!admin) {
+    return next(
+      new Error('Admin Not Found , try again', {
+        cause: 400,
+      }),
+    )
+  }
+  //OTP Check
 
-    if (admin.OTP.toString() !== OTP.toString()) {
-        return next(new Error(' In-valid OTP', { cause: 400 }))
-    }
-    const token = generateToken({
-        payload: {
-            OTP,
-            id: admin._id,
-        },
-        signature: process.env.SIGN_IN_TOKEN_SECRET,
-    })
+  if (admin.OTP.toString() !== OTP.toString()) {
+    return next(new Error(' In-valid OTP', { cause: 400 }))
+  }
+  const token = generateToken({
+    payload: {
+      OTP,
+      id: admin._id,
+    },
+    signature: process.env.SIGN_IN_TOKEN_SECRET,
+  })
 
-    const adminUpdated = await AdminModel.findOneAndUpdate(
-      { phoneNumber },
-      {
-          token,
-          status: 'Online',
-      },
-      {
-          new: true,
-      },
+  const adminUpdated = await AdminModel.findOneAndUpdate(
+    { phoneNumber },
+    {
+      token,
+      status: 'Online',
+    },
+    {
+      new: true,
+    },
   )
 
-    res.status(200).json({ message: 'loggin Done',adminUpdated })
+  res.status(200).json({ message: 'loggin Done', adminUpdated })
 }
 
 export const updateProfile = async (req, res, next) => {
-    const { 
+  const {
 
-      email,
-        userName,
-        age,
-        gender,
-        // phone,
-        
+    email,
+    userName,
+    age,
+    gender,
+    // phone,
 
-    } = req.body
-    const { id } = req.authAdmin
 
- 
+  } = req.body
+  const { id } = req.authAdmin
 
-    // const { id } = req.authAdmin
-    // const customId = nanoid()
-    // const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
-    //     folder: `${process.env.PROJECT_FOLDER}/Admin/ProfilePic/${customId}`,
-    //     resource_type: 'image'
-    // })
-    const admin = await AdminModel.findByIdAndUpdate(id, {
-        // profilePic: {
-        //     secure_url,
-        //     public_id,
-        // },
-        email,
-        userName,
-        age,
-        gender,
-        // phone,
-    },
-        {
-            new: true,
-        },)
-    if (admin) {
-        return res.status(200).json({ messege: 'Done', admin });
-    }
+
+
+  // const { id } = req.authAdmin
+  // const customId = nanoid()
+  // const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
+  //     folder: `${process.env.PROJECT_FOLDER}/Admin/ProfilePic/${customId}`,
+  //     resource_type: 'image'
+  // })
+  const admin = await AdminModel.findByIdAndUpdate(id, {
+    // profilePic: {
+    //     secure_url,
+    //     public_id,
+    // },
+    email,
+    userName,
+    age,
+    gender,
+    // phone,
+  },
+    {
+      new: true,
+    },)
+  if (admin) {
+    return res.status(200).json({ messege: 'Done', admin });
+  }
 
 }
 
@@ -243,403 +243,404 @@ export const getadminaccount = async (req, res, next) => {
 
   const user = await AdminModel.findById(id)
   if (user) {
-      return res.status(200).json({ message: 'done', user })
+    return res.status(200).json({ message: 'done', user })
   }
   res.status(404).json({ message: 'in-valid Id' })
 }
 
 export const addEngineer = async (req, res, next) => {
-    const {
-        userName,
-        email,
-        password,
-        age,
-        gender,
-        phoneNumber,
-        address,
-        spicalAt
-    } = req.body
+  const {
+    userName,
+    email,
+    password,
+    age,
+    gender,
+    phoneNumber,
+    address,
+    spicalAt
+  } = req.body
 
-    const { id } = req.authAdmin
+  const { id } = req.authAdmin
 
-    // email check
-    const isEmailDuplicate = await EngineerModel.findOne({ email })
-    if (isEmailDuplicate) {
-        return next(new Error('email is already exist', { cause: 400 }))
-    }
+  // email check
+  const isEmailDuplicate = await EngineerModel.findOne({ email })
+  if (isEmailDuplicate) {
+    return next(new Error('email is already exist', { cause: 400 }))
+  }
 
-    const token = generateToken({
-        payload: {
-            email,
-        },
-        signature: process.env.CONFIRMATION_EMAIL_TOKEN,
-        // expiresIn: '1h',
-    })
-    // To Do replace email => phone 
-    const conirmationlink = `${req.protocol}://${req.headers.host}/Engineer/confirm/${token}`
-    const isEmailSent = sendEmailService({
-        to: email,
-        subject: 'Confirmation Email',
-        // message: `<a href=${conirmationlink}>Click here to confirm </a>`,
-        message: emailTemplate({
-            link: conirmationlink,
-            linkData: 'Click here to confirm',
-            subject: 'Confirmation Email',
-        }),
-    })
+  const token = generateToken({
+    payload: {
+      email,
+    },
+    signature: process.env.CONFIRMATION_EMAIL_TOKEN,
+    // expiresIn: '1h',
+  })
+  // To Do replace email => phone 
+  const conirmationlink = `${req.protocol}://${req.headers.host}/Engineer/confirm/${token}`
+  const isEmailSent = sendEmailService({
+    to: email,
+    subject: 'Confirmation Email',
+    // message: `<a href=${conirmationlink}>Click here to confirm </a>`,
+    message: emailTemplate({
+      link: conirmationlink,
+      linkData: 'Click here to confirm',
+      subject: 'Confirmation Email',
+    }),
+  })
 
 
-    if (!isEmailSent) {
-        return next(new Error('fail to sent confirmation email', { cause: 400 }))
-    }
+  if (!isEmailSent) {
+    return next(new Error('fail to sent confirmation email', { cause: 400 }))
+  }
 
-    // hash password => from hooks
-    const hashedPassword = pkg.hashSync(password, +process.env.SALT_ROUND)
+  // hash password => from hooks
+  const hashedPassword = pkg.hashSync(password, +process.env.SALT_ROUND)
 
-    const engineer = new EngineerModel({
-        userName,
-        email,
-        password: hashedPassword,
-        age,
-        gender,
-        phoneNumber,
-        address,
-        spicalAt,
-        addedBy: id,
+  const engineer = new EngineerModel({
+    userName,
+    email,
+    password: hashedPassword,
+    age,
+    gender,
+    phoneNumber,
+    address,
+    spicalAt,
+    addedBy: id,
 
-    })
-    const saveEngineer = await engineer.save()
-    res.status(201).json({ message: 'Done', saveEngineer })
+  })
+  const saveEngineer = await engineer.save()
+  res.status(201).json({ message: 'Done', saveEngineer })
 }
 
 
 export const getAll = async (req, res, next) => {
-    // const { page, size } = req.query
-    // const { limit, skip } = paginationFunction({ page, size })
-    const { id } = req.authAdmin
-    const admin = await AdminModel.findById(id);
-    if (!admin) {
-        return res.status(404).json({ error: 'admin not found' });
-    }
-    const Engs = await EngineerModel.find()
-    // .limit(limit).skip(skip)
-    res.status(200).json({ message: 'Done', Engs })
+  // const { page, size } = req.query
+  // const { limit, skip } = paginationFunction({ page, size })
+  const { id } = req.authAdmin
+  const admin = await AdminModel.findById(id);
+  if (!admin) {
+    return res.status(404).json({ error: 'admin not found' });
+  }
+  const Engs = await EngineerModel.find()
+  // .limit(limit).skip(skip)
+  res.status(200).json({ message: 'Done', Engs })
 }
 
 export const getEngBy = async (req, res, next) => {
   const { id } = req.authAdmin
-  const {engid}= req.query
+  const { engid } = req.query
   const admin = await AdminModel.findById(id);
   if (!admin) {
-      return res.status(404).json({ error: 'admin not found' });
+    return res.status(404).json({ error: 'admin not found' });
   }
   const eng = await EngineerModel.findById(engid);
   if (!eng) {
-      return res.status(404).json({ error: 'eng not found' });
+    return res.status(404).json({ error: 'eng not found' });
   }
-    // const { searchKey, page, size } = req.query
+  // const { searchKey, page, size } = req.query
 
-    // const { limit, skip } = paginationFunction({ page, size })
+  // const { limit, skip } = paginationFunction({ page, size })
 
-    // const Engineer = await EngineerModel
-    //     .find(
-    //       // {
-    //         // $or: [
-    //         //     { userName: { $regex: searchKey, $options: 'i' } },
-    //         //     { phoneNumber: { $regex: searchKey, $options: 'i' } },
-    //         // ],
-    //     // }
-    //   )
-    //     // .limit(limit)
-    //     // .skip(skip)
-    res.status(200).json({ message: 'Done', eng })
+  // const Engineer = await EngineerModel
+  //     .find(
+  //       // {
+  //         // $or: [
+  //         //     { userName: { $regex: searchKey, $options: 'i' } },
+  //         //     { phoneNumber: { $regex: searchKey, $options: 'i' } },
+  //         // ],
+  //     // }
+  //   )
+  //     // .limit(limit)
+  //     // .skip(skip)
+  res.status(200).json({ message: 'Done', eng })
 }
 
 
 export const updateEng = async (req, res, next) => {
-    const { id } = req.authAdmin
-    const { engId } = req.params
+  const { id } = req.authAdmin
+  const { engId } = req.params
 
-    const {
-        userName,
-        age,
-        gender,
-        phoneNumber,
-        address,
-        password
-    } = req.body
+  const {
+    userName,
+    age,
+    gender,
+    phoneNumber,
+    address,
+    password
+  } = req.body
 
-    const Eng = await EngineerModel.findById(engId)
-    if (!Eng) {
-        return next(new Error('Not Found', { cause: 400 }))
-    }
+  const Eng = await EngineerModel.findById(engId)
+  if (!Eng) {
+    return next(new Error('Not Found', { cause: 400 }))
+  }
 
-    // if(!userName){
-    //   Eng.userName = userName
+  // if(!userName){
+  //   Eng.userName = userName
 
-    // }
-    
-    Eng.userName = userName
-    Eng.password=password
-    Eng.age = age
-    Eng.gender = gender
-    Eng.phoneNumber = phoneNumber
-    Eng.address = address
-    Eng.UpdatedBy = id
+  // }
 
-    if (req.file) {
-        await cloudinary.uploader.destroy(Eng.profilePic.public_id)   //delete old image
+  Eng.userName = userName
+  Eng.password = password
+  Eng.age = age
+  Eng.gender = gender
+  Eng.phoneNumber = phoneNumber
+  Eng.address = address
+  Eng.UpdatedBy = id
 
-        const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
-            folder: `${process.env.PROJECT_FOLDER}/Engineer/ProfilePic/${Eng.customId}`, //new image
-        })
-        
-        Eng.profilePic = { secure_url, public_id }
+  if (req.file) {
+    await cloudinary.uploader.destroy(Eng.profilePic.public_id)   //delete old image
 
-    }
-    await Eng.save()
-    res.status(200).json({ messege: 'Done updated', Eng })
+    const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
+      folder: `${process.env.PROJECT_FOLDER}/Engineer/ProfilePic/${Eng.customId}`, //new image
+    })
+
+    Eng.profilePic ={public_id}
+    Eng.profilePic = {secure_url}
+
+
+  }
+  await Eng.save()
+  res.status(200).json({ messege: 'Done updated', Eng })
 }
 
 export const deleteEng = async (req, res, next) => {
-    const { engId } = req.params
-    const { id } = req.authAdmin
+  const { engId } = req.params
+  const { id } = req.authAdmin
 
-    // check engineer id
-    const engExists = await EngineerModel.findById(engId)
-    if (!engExists) {
-        return next(new Error('invalid engineerId', { cause: 400 }))
-    }
-    await EngineerModel.deleteOne({ engExists })
-    engExists.deletedBy = id
-    // //Cloudinary
-    // await cloudinary.api.delete_all_resources(
-    //     `${process.env.PROJECT_FOLDER}/Engineer/ProfilePic/${engExists.customId}`,
-    // )
+  // check engineer id
+  const engExists = await EngineerModel.findById(engId)
+  if (!engExists) {
+    return next(new Error('invalid engineerId', { cause: 400 }))
+  }
+  await EngineerModel.deleteOne({ engExists })
+  engExists.deletedBy = id
+  // //Cloudinary
+  // await cloudinary.api.delete_all_resources(
+  //     `${process.env.PROJECT_FOLDER}/Engineer/ProfilePic/${engExists.customId}`,
+  // )
 
-    // await cloudinary.api.delete_folder(
-    //     `${process.env.PROJECT_FOLDER}/Engineer/ProfilePic/${engExists.customId}`,
-    // )
-    await engExists.save()
-    res.status(200).json({ messsage: 'Deleted Done' })
+  // await cloudinary.api.delete_folder(
+  //     `${process.env.PROJECT_FOLDER}/Engineer/ProfilePic/${engExists.customId}`,
+  // )
+  await engExists.save()
+  res.status(200).json({ messsage: 'Deleted Done' })
 }
 
 export const logOut = async (req, res, next) => {
-    const { id } = req.authAdmin
-    const { userid } = req.query
+  const { id } = req.authAdmin
+  const { userid } = req.query
 
-    const userExist = await AdminModel.findById(userid)
-    if (!userExist) {
-        return res.json({ message: 'invaled admin id' })
-    }
-    if (userExist._id.toString() !== id.toString()) {
-        return next(new Error('can not take this action', { cause: 400 }))
-    }
-    await EngineerModel.findByIdAndUpdate(id, {
-        status: 'Offline'
-    })
-    res.json({ message: "log out done" })
+  const userExist = await AdminModel.findById(userid)
+  if (!userExist) {
+    return res.json({ message: 'invaled admin id' })
+  }
+  if (userExist._id.toString() !== id.toString()) {
+    return next(new Error('can not take this action', { cause: 400 }))
+  }
+  await EngineerModel.findByIdAndUpdate(id, {
+    status: 'Offline'
+  })
+  res.json({ message: "log out done" })
 }
 
 
 // add product , update , delete 
 
 export const addProduct = async (req, res, next) => {
-    const { title, desc, price, appliedDiscount, colors, sizes, stock } = req.body
-    const { id } = req.authAdmin
-    const { categoryId  } = req.query
-    // check Ids
-    const categoryExists = await categoryModel.findById(categoryId)
-  
+  const { title, desc, price, appliedDiscount, colors, sizes, stock } = req.body
+  const { id } = req.authAdmin
+  const { categoryId } = req.query
+  // check Ids
+  const categoryExists = await categoryModel.findById(categoryId)
+
+  if (!categoryExists) {
+    return next(new Error('invalid categories', { cause: 400 }))
+  }
+
+  const slug = slugify(title, {
+    replacement: '_',
+  })
+  //   if (appliedDiscount) {
+  //   const priceAfterDiscount = price - price * ((appliedDiscount || 0) / 100)
+  const priceAfterDiscount = price * (1 - (appliedDiscount || 0) / 100)
+  //   }
+
+  if (!req.files) {
+    return next(new Error('please upload pictures', { cause: 400 }))
+  }
+  const customId = nanoid()
+
+  const Images = []
+  const publicIds = []
+  for (const file of req.files) {
+    const { secure_url, public_id } = await cloudinary.uploader.upload(
+      file.path,
+      {
+        folder: `${process.env.PROJECT_FOLDER}/Categories/${categoryExists.customId}/Products/${customId}`,
+      },
+    )
+    Images.push({ secure_url, public_id })
+    publicIds.push(public_id)
+  }
+
+  const productObject = {
+    title,
+    slug,
+    desc,
+    price,
+    appliedDiscount,
+    priceAfterDiscount,
+    colors,
+    sizes,
+    stock,
+    categoryId,
+    Images,
+    customId,
+    addedBy: id
+  }
+
+  const product = await productModel.create(productObject)
+  if (!product) {
+    await cloudinary.api.delete_resources(publicIds)
+    return next(new Error('trye again later', { cause: 400 }))
+  }
+  res.status(200).json({ message: 'Done', product })
+}
+
+export const updateProduct = async (req, res, next) => {
+  const { title, desc, price, appliedDiscount, colors, sizes, stock } = req.body
+
+  const { productId, categoryId } = req.query
+
+  // check productId
+  const product = await productModel.findById(productId)
+  if (!product) {
+    return next(new Error('invalid product id', { cause: 400 }))
+  }
+
+
+  const categoryExists = await categoryModel.findById(
+    categoryId || product.categoryId,
+  )
+  if (categoryId) {
     if (!categoryExists) {
       return next(new Error('invalid categories', { cause: 400 }))
     }
-  
-    const slug = slugify(title, {
-      replacement: '_',
-    })
-    //   if (appliedDiscount) {
-    //   const priceAfterDiscount = price - price * ((appliedDiscount || 0) / 100)
+    product.categoryId = categoryId
+  }
+
+
+
+  if (appliedDiscount && price) {
     const priceAfterDiscount = price * (1 - (appliedDiscount || 0) / 100)
-    //   }
-  
-    if (!req.files) {
-      return next(new Error('please upload pictures', { cause: 400 }))
-    }
-    const customId = nanoid()
-  
-    const Images = []
-    const publicIds = []
+    product.priceAfterDiscount = priceAfterDiscount
+    product.price = price
+    product.appliedDiscount = appliedDiscount
+  } else if (price) {
+    const priceAfterDiscount =
+      price * (1 - (product.appliedDiscount || 0) / 100)
+    product.priceAfterDiscount = priceAfterDiscount
+    product.price = price
+  } else if (appliedDiscount) {
+    const priceAfterDiscount =
+      product.price * (1 - (appliedDiscount || 0) / 100)
+    product.priceAfterDiscount = priceAfterDiscount
+    product.appliedDiscount = appliedDiscount
+  }
+
+  if (req.files?.length) {
+    let ImageArr = []
     for (const file of req.files) {
       const { secure_url, public_id } = await cloudinary.uploader.upload(
         file.path,
         {
-          folder: `${process.env.PROJECT_FOLDER}/Categories/${categoryExists.customId}/Products/${customId}`,
+          folder: `${process.env.PROJECT_FOLDER}/Categories/${categoryExists.customId}/Products/${product.customId}`,
         },
       )
-      Images.push({ secure_url, public_id })
-      publicIds.push(public_id)
+      ImageArr.push({ secure_url, public_id })
     }
-  
-    const productObject = {
-      title,
-      slug,
-      desc,
-      price,
-      appliedDiscount,
-      priceAfterDiscount,
-      colors,
-      sizes,
-      stock,
-      categoryId,
-      Images,
-      customId,
-      addedBy: id
+    let public_ids = []
+    for (const image of product.Images) {
+      public_ids.push(image.public_id)
     }
-  
-    const product = await productModel.create(productObject)
-    if (!product) {
-      await cloudinary.api.delete_resources(publicIds)
-      return next(new Error('trye again later', { cause: 400 }))
-    }
-    res.status(200).json({ message: 'Done', product })
+    await cloudinary.api.delete_resources(public_ids)
+    product.Images = ImageArr
   }
 
-  export const updateProduct = async (req, res, next) => {
-    const { title, desc, price, appliedDiscount, colors, sizes, stock } = req.body
-  
-    const { productId, categoryId } = req.query
-  
-    // check productId
-    const product = await productModel.findById(productId)
-    if (!product) {
-      return next(new Error('invalid product id', { cause: 400 }))
-    }
-  
-    
-    const categoryExists = await categoryModel.findById(
-      categoryId || product.categoryId,
+  if (title) {
+    product.title = title
+    product.slug = slugify(title, '-')
+  }
+  if (desc) product.desc = desc
+  if (colors) product.colors = colors
+  if (sizes) product.sizes = sizes
+  if (stock) product.stock = stock
+
+  await product.save()
+  res.status(200).json({ message: 'Done', product })
+}
+
+
+export const deleteProduct = async (req, res, next) => {
+  const { productId } = req.query
+  // check productId
+  const product = await productModel.findByIdAndDelete(productId)
+  if (!product) {
+    return next(new Error('invalid product id', { cause: 400 }))
+  }
+  res.status(200).json({ message: 'Done', product })
+}
+
+
+
+export const addCategory = async (req, res, next) => {
+  const { id } = req.authAdmin
+  const { name } = req.body
+  // const slug = slugify(name, '_')
+
+
+  // if (await AdminModel.findById({ id })) {
+  //     return next(
+  //       new Error('invaild id ', { cause: 400 }),
+  //     )
+  //   }
+  if (await categoryModel.findOne({ name })) {
+    return next(
+      new Error('please enter different category name', { cause: 400 }),
     )
-    if (categoryId) {
-      if (!categoryExists) {
-        return next(new Error('invalid categories', { cause: 400 }))
-      }
-      product.categoryId = categoryId
-    }
-  
-
-  
-    if (appliedDiscount && price) {
-      const priceAfterDiscount = price * (1 - (appliedDiscount || 0) / 100)
-      product.priceAfterDiscount = priceAfterDiscount
-      product.price = price
-      product.appliedDiscount = appliedDiscount
-    } else if (price) {
-      const priceAfterDiscount =
-        price * (1 - (product.appliedDiscount || 0) / 100)
-      product.priceAfterDiscount = priceAfterDiscount
-      product.price = price
-    } else if (appliedDiscount) {
-      const priceAfterDiscount =
-        product.price * (1 - (appliedDiscount || 0) / 100)
-      product.priceAfterDiscount = priceAfterDiscount
-      product.appliedDiscount = appliedDiscount
-    }
-  
-    if (req.files?.length) {
-      let ImageArr = []
-      for (const file of req.files) {
-        const { secure_url, public_id } = await cloudinary.uploader.upload(
-          file.path,
-          {
-            folder: `${process.env.PROJECT_FOLDER}/Categories/${categoryExists.customId}/Products/${product.customId}`,
-          },
-        )
-        ImageArr.push({ secure_url, public_id })
-      }
-      let public_ids = []
-      for (const image of product.Images) {
-        public_ids.push(image.public_id)
-      }
-      await cloudinary.api.delete_resources(public_ids)
-      product.Images = ImageArr
-    }
-  
-    if (title) {
-      product.title = title
-      product.slug = slugify(title, '-')
-    }
-    if (desc) product.desc = desc
-    if (colors) product.colors = colors
-    if (sizes) product.sizes = sizes
-    if (stock) product.stock = stock
-  
-    await product.save()
-    res.status(200).json({ message: 'Done', product })
   }
 
+  // if (!req.file) {
+  //   return next(new Error('please upload a category image', { cause: 400 }))
+  // }
 
-  export const deleteProduct = async (req, res, next) => {
-    const { productId } = req.query
-    // check productId
-    const product = await productModel.findByIdAndDelete(productId)
-    if (!product) {
-      return next(new Error('invalid product id', { cause: 400 }))
-    }
-    res.status(200).json({ message: 'Done', product })
-  }
+  // host
+  // const customId = nanoid()
+  // const { secure_url, public_id } = await cloudinary.uploader.upload(
+  //   req.file.path,
+  //   {
+  //     folder: `${process.env.PROJECT_FOLDER}/Categories/${customId}`,
+  //   },
+  // )
 
-
-
-  export const addCategory=async(req,res,next)=>{
-    const { id } = req.authAdmin
-    const { name } = req.body
-    // const slug = slugify(name, '_')
-  
-
-    // if (await AdminModel.findById({ id })) {
-    //     return next(
-    //       new Error('invaild id ', { cause: 400 }),
-    //     )
-    //   }
-    if (await categoryModel.findOne({ name })) {
-      return next(
-        new Error('please enter different category name', { cause: 400 }),
-      )
-    }
-  
-    // if (!req.file) {
-    //   return next(new Error('please upload a category image', { cause: 400 }))
-    // }
-  
-    // host
-    // const customId = nanoid()
-    // const { secure_url, public_id } = await cloudinary.uploader.upload(
-    //   req.file.path,
-    //   {
-    //     folder: `${process.env.PROJECT_FOLDER}/Categories/${customId}`,
-    //   },
-    // )
-  
-    const categoryObject = {
-      name,
-      slug,
+  const categoryObject = {
+    name,
+    slug,
     //   Image: {
     //     secure_url,
     //     public_id,
     //   },
-      customId,
-      createdBy: id,
-    }
-  
-    const category = await categoryModel.create(categoryObject)
-    if (!category) {
-      await cloudinary.uploader.destroy(public_id)
-      return next(
-        new Error('try again later , fail to add your category', { cause: 400 }),
-      )
-    }
-  
-    res.status(200).json({ message: 'Added Done', category })
+    customId,
+    createdBy: id,
   }
-  
+
+  const category = await categoryModel.create(categoryObject)
+  if (!category) {
+    await cloudinary.uploader.destroy(public_id)
+    return next(
+      new Error('try again later , fail to add your category', { cause: 400 }),
+    )
+  }
+
+  res.status(200).json({ message: 'Added Done', category })
+}
