@@ -56,7 +56,7 @@ import { customAlphabet } from "nanoid"
 import { paginationFunction } from "../../../utils/pagination.js"
 import { categoryModel } from "../../../../DB/Models/Category.model.js"
 import { productModel } from "../../../../DB/Models/Product.model.js"
-import slugify from "slugify"
+
 const nanoid = customAlphabet('1234567890', 6)
 
 export const SignUp = async (req, res, next) => {
@@ -596,8 +596,7 @@ export const deleteProduct = async (req, res, next) => {
 export const addCategory=async(req,res,next)=>{
   const { id } = req.authAdmin
   const { name } = req.body
-  // const slug = slugify(name,{
-  //   replacement:'_'})
+ 
 
 
   if (!await AdminModel.findById(id)) {
@@ -625,7 +624,7 @@ export const addCategory=async(req,res,next)=>{
   
   const categoryObject = {
     name,
-    // slug,
+    
     Image: {
       secure_url,
       public_id,
