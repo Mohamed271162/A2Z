@@ -397,7 +397,6 @@ export const updateEng = async (req, res, next) => {
     Eng.profilePic =public_id
     Eng.profilePic = secure_url
 
-
   }
   await Eng.save()
   res.status(200).json({ messege: 'Done updated', Eng })
