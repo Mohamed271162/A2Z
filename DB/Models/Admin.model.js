@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
 
 
-const EngineerSchema = new Schema(
+const AdminSchema = new Schema(
     {
         userName: {
             type: String,
@@ -70,7 +70,7 @@ const EngineerSchema = new Schema(
     { timestamps: true },
 )
 
-export const AdminModel = model('Admin', EngineerSchema)
+export const AdminModel = model('Admin', AdminSchema)
 
 
 

@@ -56,6 +56,7 @@ import { customAlphabet } from "nanoid"
 import { paginationFunction } from "../../../utils/pagination.js"
 import { categoryModel } from "../../../../DB/Models/Category.model.js"
 import { productModel } from "../../../../DB/Models/Product.model.js"
+import slugify from "slugify"
 
 const nanoid = customAlphabet('1234567890', 6)
 
@@ -502,7 +503,7 @@ export const addCategory=async(req,res,next)=>{
 export const addProduct = async (req, res, next) => {
   const { title, desc, price, appliedDiscount, colors, sizes, stock } = req.body
   const { id } = req.authAdmin
-  const { categoryId } = req.query
+  const { categoryId } = req.params
   // check Ids
   const categoryExists = await categoryModel.findById(categoryId)
 
@@ -538,7 +539,6 @@ export const addProduct = async (req, res, next) => {
 
   const productObject = {
     title,
-    slug,
     desc,
     price,
     appliedDiscount,
@@ -549,7 +549,8 @@ export const addProduct = async (req, res, next) => {
     categoryId,
     Images,
     customId,
-    addedBy: id
+    createdBy:id,
+    slug,
   }
 
   const product = await productModel.create(productObject)

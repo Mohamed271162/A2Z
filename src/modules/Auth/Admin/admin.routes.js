@@ -23,7 +23,14 @@ router.delete('/delete/:engId', isAuthAdmin(), asyncHandler(ac.deleteEng))
 router.get('/logout/:userid', isAuthAdmin(), asyncHandler(ac.logOut))
 
 router.post(
-  '/addproduct',
+  '/addcategory',
+  isAuthAdmin(),
+  multerCloudFunction(allowedExtensions.Image).single('image'),
+  asyncHandler(ac.addCategory),
+)
+
+router.post(
+  '/addproduct/:categoryId',isAuthAdmin(),
   multerCloudFunction(allowedExtensions.Image).array('image', 10),
   // validationCoreFunction(validators.addProductSchema),
   asyncHandler(ac.addProduct),
@@ -36,12 +43,6 @@ router.put(
 )
 router.delete('/deleteproduct', asyncHandler(ac.deleteProduct))
 
-router.post(
-  '/addcategory',
-  isAuthAdmin(),
-  multerCloudFunction(allowedExtensions.Image).single('image'),
-  asyncHandler(ac.addCategory),
-)
 
 
 
