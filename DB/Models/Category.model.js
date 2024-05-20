@@ -27,7 +27,7 @@ const categorySchema = new Schema(
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: 'Admin',
-      required: true,
+    
     },
     updatedBy: {
       type: Schema.Types.ObjectId,

@@ -3,6 +3,8 @@ import pkg from 'bcrypt'
 import { generateToken, verifyToken } from "../../../utils/tokenFunctions.js"
 import { sendEmailService } from "../../../services/sendEmailService.js"
 import { emailTemplate } from "../../../utils/emailTemplate.js"
+import { cartModel } from "../../../../DB/Models/cart.model.js"
+import { productModel } from "../../../../DB/Models/Product.model.js"
 
 export const SignUp = async (req, res, next) => {
     const { userName,
@@ -131,11 +133,12 @@ export const getUserAccount = async (req, res, next) => {
 
 
 export const addToCart = async (req, res, next) => {
-    const userId = authClient
+    const {id} = req.authClient
     const { productId, quantity } = req.body
 
     // ================== product check ==============
     const productCheck = await productModel.findOne({
+
         _id: productId,
         stock: { $gte: quantity },
     })
@@ -145,7 +148,7 @@ export const addToCart = async (req, res, next) => {
         )
     }
 
-    const userCart = await cartModel.findOne({ userId }).lean()
+    const userCart = await cartModel.findOne({ id }).lean()
     if (userCart) {
         // update quantity
         let productExists = false
@@ -180,7 +183,7 @@ export const addToCart = async (req, res, next) => {
     }
 
     const cartObject = {
-        userId,
+        userId:id,
         products: [{ productId, quantity }],
         subTotal: productCheck.priceAfterDiscount * quantity,
     }

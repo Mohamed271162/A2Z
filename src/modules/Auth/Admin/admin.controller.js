@@ -500,10 +500,17 @@ export const addCategory=async(req,res,next)=>{
 
 
 export const updateCategory = async (req, res, next) => {
+  const { id } = req.authAdmin
   const { categoryId } = req.params
   const { name } = req.body
 
+  if (!await AdminModel.findById(id)) {
+    return next(
+      new Error('invaild id ', { cause: 400 }),
+    )
+  }
   // get category by id
+  
   const category = await categoryModel.findById(categoryId)
   if (!category) {
     return next(new Error('invalud category Id', { cause: 400 }))
@@ -529,6 +536,7 @@ export const updateCategory = async (req, res, next) => {
 
     category.name = name
     category.slug = slugify(name, '_')
+    category.updatedBy=id
   }
 
   if (req.file) {
@@ -549,6 +557,9 @@ export const updateCategory = async (req, res, next) => {
   await category.save()
   res.status(200).json({ message: 'Updated Done', category })
 }
+
+
+
 
 
 // add product , update , delete 
@@ -617,7 +628,7 @@ export const addProduct = async (req, res, next) => {
 export const updateProduct = async (req, res, next) => {
   const { title, desc, price, appliedDiscount, colors, sizes, stock } = req.body
 
-  const { productId, categoryId } = req.query
+  const { productId, categoryId } = req.params
 
   // check productId
   const product = await productModel.findById(productId)
@@ -697,5 +708,9 @@ export const deleteProduct = async (req, res, next) => {
   }
   res.status(200).json({ message: 'Done', product })
 }
+
+
+
+
 
 

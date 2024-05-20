@@ -31,6 +31,7 @@ router.post(
 
 router.put(
   '/updatecategory/:categoryId',
+
   multerCloudFunction(allowedExtensions.Image).single('image'),
   asyncHandler(ac.updateCategory),
 )
@@ -42,7 +43,7 @@ router.post(
   asyncHandler(ac.addProduct),
 )
 router.put(
-  '/updateproduct',
+  '/updateproduct/categoryId/productId',
   multerCloudFunction(allowedExtensions.Image).array('image', 10),
   // validationCoreFunction(validators.updateProductSchema),
   asyncHandler(ac.updateProduct),

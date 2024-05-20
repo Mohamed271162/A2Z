@@ -5,12 +5,17 @@ import { asyncHandler } from '../../../utils/errorhandling.js'
 import { isAuthUser } from '../../../middlewares/auth.user.js'
 
 
-router.post('/',asyncHandler(uc.SignUp))
+router.post('/', asyncHandler(uc.SignUp))
 router.get('/confirm/:token', asyncHandler(uc.confirmEmail))
 
-router.post('/login',asyncHandler(uc.logIn))
-router.get('/getUser',asyncHandler(uc.getAllUser))
-router.get('/getUserAccount',isAuthUser(),asyncHandler(uc.getUserAccount))
+router.post('/login', asyncHandler(uc.logIn))
+router.get('/getUser', asyncHandler(uc.getAllUser))
+router.get('/getUserAccount', isAuthUser(), asyncHandler(uc.getUserAccount))
 
+router.post('/addcart',
+    isAuthUser(),
+    asyncHandler(uc.addToCart))
+    
+router.delete('/deletecart', isAuthUser(), asyncHandler(uc.deleteFromCart))
 
 export default router
