@@ -627,7 +627,7 @@ export const addProduct = async (req, res, next) => {
 
 export const updateProduct = async (req, res, next) => {
   const { id } = req.authAdmin
-  const { productId, categoryId } = req.query
+  const { productId, categoryId } = req.body
 
 
   const { title, desc, price, appliedDiscount, colors, sizes, stock } = req.body
