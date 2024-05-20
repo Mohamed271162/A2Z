@@ -17,10 +17,6 @@ const AdminSchema = new Schema(
             type: String,
             // unique: true,
         },
-        spicalAt: {
-            type: String,
-            // unique: true,
-        },
         
         isVerify: {
             type: Boolean,

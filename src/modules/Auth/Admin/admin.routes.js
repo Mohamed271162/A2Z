@@ -29,6 +29,12 @@ router.post(
   asyncHandler(ac.addCategory),
 )
 
+router.put(
+  '/updatecategory/:categoryId',
+  multerCloudFunction(allowedExtensions.Image).single('image'),
+  asyncHandler(ac.updateCategory),
+)
+
 router.post(
   '/addproduct/:categoryId',isAuthAdmin(),
   multerCloudFunction(allowedExtensions.Image).array('image', 10),

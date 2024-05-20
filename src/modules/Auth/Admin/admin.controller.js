@@ -498,6 +498,59 @@ export const addCategory=async(req,res,next)=>{
   res.status(200).json({ message: 'Added Done', category })
 }
 
+
+export const updateCategory = async (req, res, next) => {
+  const { categoryId } = req.params
+  const { name } = req.body
+
+  // get category by id
+  const category = await categoryModel.findById(categoryId)
+  if (!category) {
+    return next(new Error('invalud category Id', { cause: 400 }))
+  }
+
+  if (name) {
+    // different from old name
+    if (category.name == name.toLowerCase()) {
+      return next(
+        new Error('please enter different name from the old category name', {
+          cause: 400,
+        }),
+      )
+    }
+    // unique name
+    if (await categoryModel.findOne({ name })) {
+      return next(
+        new Error('please enter different category name , duplicate name', {
+          cause: 400,
+        }),
+      )
+    }
+
+    category.name = name
+    category.slug = slugify(name, '_')
+  }
+
+  if (req.file) {
+    // delete the old category image
+    await cloudinary.uploader.destroy(category.Image.public_id)
+
+    // upload the new category image
+    const { secure_url, public_id } = await cloudinary.uploader.upload(
+      req.file.path,
+      {
+        folder: `${process.env.PROJECT_FOLDER}/Categories/${category.customId}`,
+      },
+    )
+    // db
+    category.Image = { secure_url, public_id }
+  }
+
+  await category.save()
+  res.status(200).json({ message: 'Updated Done', category })
+}
+
+
 // add product , update , delete 
 
 export const addProduct = async (req, res, next) => {

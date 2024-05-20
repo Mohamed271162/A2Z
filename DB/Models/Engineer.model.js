@@ -59,6 +59,11 @@ const EngineerSchema = new Schema(
             secure_url: String,
             public_id: String,
         },
+        spicalAt: {
+            type: String,
+            // unique: true,
+        },
+        
 
 
         status: {
