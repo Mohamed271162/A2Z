@@ -627,10 +627,11 @@ export const addProduct = async (req, res, next) => {
 
 export const updateProduct = async (req, res, next) => {
   const { id } = req.authAdmin
+  const { productId, categoryId } = req.query
+
 
   const { title, desc, price, appliedDiscount, colors, sizes, stock } = req.body
 
-  const { productId, categoryId } = req.params
   if (!await AdminModel.findById(id)) {
     return next(
       new Error('invaild id ', { cause: 400 }),
