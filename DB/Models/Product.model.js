@@ -39,6 +39,7 @@ const productSchema = new Schema(
       required: true,
       default: 1,
     },
+    name:String,
 
     // ======= Related Ids section =======
     createdBy: {
