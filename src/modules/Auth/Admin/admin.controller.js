@@ -575,11 +575,11 @@ export const getAllCategories = async (req, res, next) => {
 // add product , update , delete 
 
 export const addProduct = async (req, res, next) => {
-  const { title, desc, price, appliedDiscount, colors, sizes, stock,categoryname } = req.body
+  const { title, desc, price, appliedDiscount, colors, sizes, stock,name } = req.body
   const { id } = req.authAdmin
   // const { categoryId } = req.params
   // check Ids
-  const categoryExists = await categoryModel.findOne({categoryname})
+  const categoryExists = await categoryModel.findOne({name})
 
   if (!categoryExists) {
     return next(new Error('invalid categories', { cause: 400 }))
@@ -620,7 +620,7 @@ export const addProduct = async (req, res, next) => {
     colors,
     sizes,
     stock,
-    categoryname,
+    name,
     Images,
     customId,
     createdBy:id,
