@@ -37,7 +37,7 @@ router.put(
 )
 
 router.post(
-  '/addproduct/:categoryId',isAuthAdmin(),
+  '/addproduct',isAuthAdmin(),
   multerCloudFunction(allowedExtensions.Image).array('image', 10),
   // validationCoreFunction(validators.addProductSchema),
   asyncHandler(ac.addProduct),
