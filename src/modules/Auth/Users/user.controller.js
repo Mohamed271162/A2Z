@@ -130,6 +130,18 @@ export const getUserAccount = async (req, res, next) => {
     res.status(404).json({ message: 'in-valid Id' })
 }
 
+export const getAllProduct = async (req, res, next) => {
+    const { id } = req.authClient
+    if (!await AdminModel.findById(id)) {
+      return next(
+        new Error('invaild id ', { cause: 400 }),
+      ) 
+    }
+    const Products = await productModel.find()
+    
+    res.status(200).json({ message: 'Done', Products })
+  }
+
 
 
 export const addToCart = async (req, res, next) => {
