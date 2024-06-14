@@ -568,9 +568,6 @@ export const getAllCategories = async (req, res, next) => {
   }
   const Categories = await categoryModel.find()
   
-  
-
-  
   res.status(200).json({ message: 'Done', Categories })
 }
 
