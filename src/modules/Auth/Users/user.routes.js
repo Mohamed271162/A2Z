@@ -11,7 +11,6 @@ router.get('/confirm/:token', asyncHandler(uc.confirmEmail))
 router.post('/login', asyncHandler(uc.logIn))
 router.get('/getUser', asyncHandler(uc.getAllUser))
 router.get('/getUserAccount', isAuthUser(), asyncHandler(uc.getUserAccount))
-router.get('/getallproduct', isAuthUser(),asyncHandler(uc.getAllProduct))
 
 router.post('/addcart',
     isAuthUser(),

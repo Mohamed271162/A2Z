@@ -4,7 +4,7 @@ import { generateToken, verifyToken } from "../../../utils/tokenFunctions.js"
 import { sendEmailService } from "../../../services/sendEmailService.js"
 import { emailTemplate } from "../../../utils/emailTemplate.js"
 import { productModel } from "../../../../DB/Models/Product.model.js"
-// import { cartModel } from "../../../../DB/Models/cart.model.js"
+import { cartModel } from "../../../../DB/Models/cart.model.js"
 
 export const SignUp = async (req, res, next) => {
     const { userName,
@@ -130,17 +130,7 @@ export const getUserAccount = async (req, res, next) => {
     res.status(404).json({ message: 'in-valid Id' })
 }
 
-export const getAllProduct = async (req, res, next) => {
-    const { id } = req.authClient
-    if (!await AdminModel.findById(id)) {
-      return next(
-        new Error('invaild id ', { cause: 400 }),
-      ) 
-    }
-    const Products = await productModel.find()
-    
-    res.status(200).json({ message: 'Done', Products })
-  }
+
 
 
 
