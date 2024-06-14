@@ -610,7 +610,7 @@ export const addProduct = async (req, res, next) => {
     colors,
     sizes,
     stock,
-    categoryId,
+    categoryname,
     Images,
     customId,
     createdBy:id,
