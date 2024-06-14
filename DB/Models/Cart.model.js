@@ -1,6 +1,4 @@
-
 import { Schema, model } from 'mongoose'
-
 const cartSchema = new Schema(
   {
     userId: {
@@ -18,7 +16,7 @@ const cartSchema = new Schema(
         quantity: {
           type: Number,
           required: true,
-        },
+        }
       },
     ],
     subTotal: {
@@ -26,7 +24,9 @@ const cartSchema = new Schema(
       required: true,
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+  },
 )
 
 export const cartModel = model('Cart', cartSchema)
