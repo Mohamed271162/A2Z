@@ -559,7 +559,20 @@ export const updateCategory = async (req, res, next) => {
 }
 
 
+export const getAllCategories = async (req, res, next) => {
+  const { id } = req.authAdmin
+  if (!await AdminModel.findById(id)) {
+    return next(
+      new Error('invaild id ', { cause: 400 }),
+    ) 
+  }
+  const Categories = await categoryModel.find()
+  
+  
 
+  
+  res.status(200).json({ message: 'Done', Categories })
+}
 
 
 // add product , update , delete 
