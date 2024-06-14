@@ -727,6 +727,18 @@ export const deleteProduct = async (req, res, next) => {
   res.status(200).json({ message: 'Done', product })
 }
 
+export const getAllProduct = async (req, res, next) => {
+  const { id } = req.authAdmin
+  if (!await AdminModel.findById(id)) {
+    return next(
+      new Error('invaild id ', { cause: 400 }),
+    ) 
+  }
+  const Products = await productModel.find()
+  
+  res.status(200).json({ message: 'Done', Products })
+}
+
 
 
 

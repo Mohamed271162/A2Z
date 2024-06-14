@@ -49,6 +49,7 @@ router.put(
   // validationCoreFunction(validators.updateProductSchema),
   asyncHandler(ac.updateProduct),
 )
+router.get('/get', isAuthAdmin(),asyncHandler(ac.getAllProduct))
 router.delete('/deleteproduct', asyncHandler(ac.deleteProduct))
 
 
