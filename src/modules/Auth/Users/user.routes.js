@@ -15,7 +15,9 @@ router.get('/getUserAccount', isAuthUser(), asyncHandler(uc.getUserAccount))
 router.post('/addcart',
     isAuthUser(),
     asyncHandler(uc.addToCart))
-    
-router.delete('/deletecart', isAuthUser(), asyncHandler(uc.deleteFromCart))
+
+router.delete('/deletecart',
+    isAuthUser(),
+    asyncHandler(uc.deleteFromCart))
 
 export default router

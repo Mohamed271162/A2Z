@@ -565,11 +565,11 @@ export const updateCategory = async (req, res, next) => {
 // add product , update , delete 
 
 export const addProduct = async (req, res, next) => {
-  const { title, desc, price, appliedDiscount, colors, sizes, stock } = req.body
+  const { title, desc, price, appliedDiscount, colors, sizes, stock,categoryname } = req.body
   const { id } = req.authAdmin
-  const { categoryId } = req.params
+  // const { categoryId } = req.params
   // check Ids
-  const categoryExists = await categoryModel.findById(categoryId)
+  const categoryExists = await categoryModel.findOne({categoryname})
 
   if (!categoryExists) {
     return next(new Error('invalid categories', { cause: 400 }))
