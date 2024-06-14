@@ -36,7 +36,7 @@ router.put(
   asyncHandler(ac.updateCategory),
 )
 router.get('/get', isAuthAdmin(),asyncHandler(ac.getAllCategories))
-router.get(
+router.post(
   '/addproduct',isAuthAdmin(),
   multerCloudFunction(allowedExtensions.Image).array('image', 10),
   // validationCoreFunction(validators.addProductSchema),
