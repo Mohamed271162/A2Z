@@ -4,7 +4,7 @@ import { generateToken, verifyToken } from "../../../utils/tokenFunctions.js"
 import { sendEmailService } from "../../../services/sendEmailService.js"
 import { emailTemplate } from "../../../utils/emailTemplate.js"
 import { productModel } from "../../../../DB/Models/Product.model.js"
-import { cartModel } from "../../../../DB/Models/cart.model.js"
+import { CartModel } from "../../../../DB/Models/cart.model.js"
 
 export const SignUp = async (req, res, next) => {
     const { userName,
@@ -149,7 +149,7 @@ export const addToCart = async (req, res, next) => {
       )
     }
   
-    const userCart = await cartModel.findOne({ userId }).lean()
+    const userCart = await CartModel.findOne({ userId }).lean()
 
     if (userCart) {
       // update quantity
@@ -171,7 +171,7 @@ export const addToCart = async (req, res, next) => {
         const productExists = await productModel.findById(product.productId)
         subTotal += productExists.priceAfterDiscount * product.quantity || 0
       }
-      const newCart = await cartModel.findOneAndUpdate(
+      const newCart = await CartModel.findOneAndUpdate(
         { userId },
         {
           subTotal,
@@ -189,7 +189,7 @@ export const addToCart = async (req, res, next) => {
       products: [{ productId, quantity }],
       subTotal: productCheck.priceAfterDiscount * quantity,
     }
-    const cartDB = await cartModel.create(cartObject)
+    const cartDB = await CartModel.create(cartObject)
     res.status(201).json({ message: 'Done', cartDB })
   }
   
