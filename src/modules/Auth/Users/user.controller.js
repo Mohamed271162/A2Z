@@ -138,6 +138,23 @@ export const getAllProduct = async (req, res, next) => {
     res.status(200).json({ message: 'Done', Products })
 }
 
+export const getProductInfo = async (req, res, next) => {
+
+    const { id } = req.authClient
+    const {productId} = req.params
+
+    if (!await UserModel.findById(id)) {
+        return next(
+          new Error('invaild id ', { cause: 400 }),
+        )
+      }
+    const product = await productModel.findById(productId)
+    if (product) {
+        return res.status(200).json({ message: 'done', product })
+    }
+    res.status(404).json({ message: 'in-valid Id' })
+}
+
 
 
 
