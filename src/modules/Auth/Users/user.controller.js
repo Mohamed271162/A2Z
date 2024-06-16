@@ -130,6 +130,14 @@ export const getUserAccount = async (req, res, next) => {
     res.status(404).json({ message: 'in-valid Id' })
 }
 
+export const getAllProduct = async (req, res, next) => {
+
+
+    const Products = await productModel.find()
+
+    res.status(200).json({ message: 'Done', Products })
+}
+
 
 
 
@@ -137,90 +145,90 @@ export const getUserAccount = async (req, res, next) => {
 export const addToCart = async (req, res, next) => {
     const userId = req.authClient
     const { productId, quantity } = req.body
-  
+
     // ================== product check ==============
     const productCheck = await productModel.findOne({
-      _id: productId,
-      stock: { $gte: quantity },
+        _id: productId,
+        stock: { $gte: quantity },
     })
     if (!productCheck) {
-      return next(
-        new Error('inavlid product please check the quantity', { cause: 400 }),
-      )
+        return next(
+            new Error('inavlid product please check the quantity', { cause: 400 }),
+        )
     }
-  
+
     const userCart = await CartModel.findOne({ userId }).lean()
 
     if (userCart) {
-      // update quantity
-      let productExists = false
-      for (const product of userCart.products) {
-        if (productId == product.productId) {
-          productExists = true
-          product.quantity = quantity
+        // update quantity
+        let productExists = false
+        for (const product of userCart.products) {
+            if (productId == product.productId) {
+                productExists = true
+                product.quantity = quantity
+            }
         }
-      }
-      // push new product
-      if (!productExists) {
-        userCart.products.push({ productId, quantity })
-      }
-  
-      // subTotal
-      let subTotal = 0
-      for (const product of userCart.products) {
-        const productExists = await productModel.findById(product.productId)
-        subTotal += productExists.priceAfterDiscount * product.quantity || 0
-      }
-      const newCart = await CartModel.findOneAndUpdate(
-        { userId },
-        {
-          subTotal,
-          products: userCart.products,
-        },
-        {
-          new: true,
-        },
-      )
-      return res.status(200).json({ message: 'Done', newCart })
+        // push new product
+        if (!productExists) {
+            userCart.products.push({ productId, quantity })
+        }
+
+        // subTotal
+        let subTotal = 0
+        for (const product of userCart.products) {
+            const productExists = await productModel.findById(product.productId)
+            subTotal += productExists.priceAfterDiscount * product.quantity || 0
+        }
+        const newCart = await CartModel.findOneAndUpdate(
+            { userId },
+            {
+                subTotal,
+                products: userCart.products,
+            },
+            {
+                new: true,
+            },
+        )
+        return res.status(200).json({ message: 'Done', newCart })
     }
-  
+
     const cartObject = {
-      userId,
-      products: [{ productId, quantity }],
-      subTotal: productCheck.priceAfterDiscount * quantity,
+        userId,
+        products: [{ productId, quantity }],
+        subTotal: productCheck.priceAfterDiscount * quantity,
     }
     const cartDB = await CartModel.create(cartObject)
     res.status(201).json({ message: 'Done', cartDB })
-  }
-  
+}
 
-  export const deleteFromCart = async (req, res, next) => {
+
+export const deleteFromCart = async (req, res, next) => {
     const userId = req.authClient
     const { productId } = req.body
-  
+
     // ================== product check ==============
     const productCheck = await productModel.findOne({
-      _id: productId,
+        _id: productId,
     })
     if (!productCheck) {
-      return next(new Error('inavlid product id', { cause: 400 }))
+        return next(new Error('inavlid product id', { cause: 400 }))
     }
-  
+
     const userCart = await CartModel.findOne({
-      userId,
-      'products.productId': productId,
+        userId,
+        'products.productId': productId,
     })
     if (!userCart) {
-      return next(new Error('no productId in cart '))
+        return next(new Error('no productId in cart '))
     }
     userCart.products.forEach((ele) => {
-      if (ele.productId == productId) {
-        userCart.products.splice(userCart.products.indexOf(ele), 1)
-      }
+        if (ele.productId == productId) {
+            userCart.products.splice(userCart.products.indexOf(ele), 1)
+        }
     })
     await userCart.save()
     res.status(200).json({ message: 'Done', userCart })
-  }
+}
 
 
 
