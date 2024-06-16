@@ -575,7 +575,13 @@ export const getAllCategories = async (req, res, next) => {
 export const getAllUser = async (req, res, next) => {
 
   const { id } = req.authAdmin
-  const user = await UserModel.findById(id)
+
+  if (!await AdminModel.findById(id)) {
+    return next(
+      new Error('invaild id ', { cause: 400 }),
+    ) 
+  }
+  const user = await UserModel.find()
   if (user) {
       return res.status(200).json({ message: 'done', user })
   }
@@ -748,6 +754,22 @@ export const getAllProduct = async (req, res, next) => {
   const Products = await productModel.find()
   
   res.status(200).json({ message: 'Done', Products })
+}
+
+export const deleteUser = async (req, res, next) => {
+  const { userId } = req.params
+  const { id } = req.authAdmin
+
+  // check engineer id
+  const userExists = await UserModel.findById(userId)
+  if (!userExists) {
+    return next(new Error('invalid userId', { cause: 400 }))
+  }
+  await UserModel.deleteOne({ userExists })
+  userExists.deletedBy = id
+
+  await userExists.save()
+  res.status(200).json({ messsage: 'Deleted Done' })
 }
 
 

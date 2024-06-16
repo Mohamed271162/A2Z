@@ -31,6 +31,12 @@ const userSchema = new Schema(
             default: false,
         },
 
+        deletedBy: {
+            type: Schema.Types.ObjectId,
+            ref: 'Admin',
+
+        },
+
         token:String,
         customId:String,
 
