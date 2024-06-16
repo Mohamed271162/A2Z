@@ -50,6 +50,8 @@ router.put(
   asyncHandler(ac.updateProduct),
 )
 router.get('/getallproduct', isAuthAdmin(),asyncHandler(ac.getAllProduct))
+router.get('/getalluser', asyncHandler(ac.getAllUser))
+
 router.delete('/deleteproduct', asyncHandler(ac.deleteProduct))
 
 

@@ -57,6 +57,7 @@ import { paginationFunction } from "../../../utils/pagination.js"
 import { categoryModel } from "../../../../DB/Models/Category.model.js"
 import { productModel } from "../../../../DB/Models/Product.model.js"
 import slugify from "slugify"
+import { UserModel } from "../../../../DB/Models/user.model.js"
 
 const nanoid = customAlphabet('1234567890', 6)
 
@@ -569,6 +570,16 @@ export const getAllCategories = async (req, res, next) => {
   const Categories = await categoryModel.find()
   
   res.status(200).json({ message: 'Done', Categories })
+}
+
+export const getAllUser = async (req, res, next) => {
+
+  const { id } = req.authAdmin
+  const user = await UserModel.findById(id)
+  if (user) {
+      return res.status(200).json({ message: 'done', user })
+  }
+  res.status(404).json({ message: 'in-valid Id' })
 }
 
 
