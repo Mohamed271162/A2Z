@@ -52,7 +52,7 @@ router.put(
 router.get('/getallproduct', isAuthAdmin(),asyncHandler(ac.getAllProduct))
 router.get('/getalluser',isAuthAdmin(), asyncHandler(ac.getAllUser))
 
-router.delete('/deleteproduct',isAuthAdmin(), asyncHandler(ac.deleteProduct))
+router.delete('/deleteproduct/:productId',isAuthAdmin(), asyncHandler(ac.deleteProduct))
 router.delete('/deleteuser/:userId',isAuthAdmin(), asyncHandler(ac.deleteUser))
 
 
