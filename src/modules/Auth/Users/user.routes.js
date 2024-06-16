@@ -12,7 +12,7 @@ router.post('/login', asyncHandler(uc.logIn))
 router.get('/getUser', asyncHandler(uc.getAllUser))
 router.get('/getUserAccount', isAuthUser(), asyncHandler(uc.getUserAccount))
 router.get('/getallproduct', asyncHandler(uc.getAllProduct))
-router.get('/getproductinfo', isAuthUser(),asyncHandler(uc.getProductInfo))
+router.get('/getproductinfo/:productId', isAuthUser(),asyncHandler(uc.getProductInfo))
 
 
 router.post('/addcart',
