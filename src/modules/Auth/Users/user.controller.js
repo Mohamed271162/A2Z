@@ -4,7 +4,7 @@ import { generateToken, verifyToken } from "../../../utils/tokenFunctions.js"
 import { sendEmailService } from "../../../services/sendEmailService.js"
 import { emailTemplate } from "../../../utils/emailTemplate.js"
 import { productModel } from "../../../../DB/Models/Product.model.js"
-import { userCartModel } from "../../../../DB/Models/cart.model.js"
+import { cartModel } from "../../../../DB/Models/cart.model.js"
 
 export const SignUp = async (req, res, next) => {
     const { userName,
@@ -149,7 +149,7 @@ export const addToCart = async (req, res, next) => {
       )
     }
   
-    const userCart = await userCartModel.findOne({ userId }).lean()
+    const userCart = await cartModel.findOne({ userId }).lean()
 
     if (userCart) {
       // update quantity
@@ -171,7 +171,7 @@ export const addToCart = async (req, res, next) => {
         const productExists = await productModel.findById(product.productId)
         subTotal += productExists.priceAfterDiscount * product.quantity || 0
       }
-      const newCart = await userCartModel.findOneAndUpdate(
+      const newCart = await cartModel.findOneAndUpdate(
         { userId },
         {
           subTotal,
@@ -189,38 +189,38 @@ export const addToCart = async (req, res, next) => {
       products: [{ productId, quantity }],
       subTotal: productCheck.priceAfterDiscount * quantity,
     }
-    const cartDB = await userCartModel.create(cartObject)
+    const cartDB = await cartModel.create(cartObject)
     res.status(201).json({ message: 'Done', cartDB })
   }
   
 
-//   export const deleteFromCart = async (req, res, next) => {
-//     const userId = req.authClient
-//     const { productId } = req.body
+  export const deleteFromCart = async (req, res, next) => {
+    const userId = req.authClient
+    const { productId } = req.body
   
-//     // ================== product check ==============
-//     const productCheck = await productModel.findOne({
-//       _id: productId,
-//     })
-//     if (!productCheck) {
-//       return next(new Error('inavlid product id', { cause: 400 }))
-//     }
+    // ================== product check ==============
+    const productCheck = await productModel.findOne({
+      _id: productId,
+    })
+    if (!productCheck) {
+      return next(new Error('inavlid product id', { cause: 400 }))
+    }
   
-//     const userCart = await cartModel.findOne({
-//       userId,
-//       'products.productId': productId,
-//     })
-//     if (!userCart) {
-//       return next(new Error('no productId in cart '))
-//     }
-//     userCart.products.forEach((ele) => {
-//       if (ele.productId == productId) {
-//         userCart.products.splice(userCart.products.indexOf(ele), 1)
-//       }
-//     })
-//     await userCart.save()
-//     res.status(200).json({ message: 'Done', userCart })
-//   }
+    const userCart = await cartModel.findOne({
+      userId,
+      'products.productId': productId,
+    })
+    if (!userCart) {
+      return next(new Error('no productId in cart '))
+    }
+    userCart.products.forEach((ele) => {
+      if (ele.productId == productId) {
+        userCart.products.splice(userCart.products.indexOf(ele), 1)
+      }
+    })
+    await userCart.save()
+    res.status(200).json({ message: 'Done', userCart })
+  }
 
 
 
