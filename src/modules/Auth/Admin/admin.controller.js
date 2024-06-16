@@ -216,13 +216,13 @@ export const updateProfile = async (req, res, next) => {
 
   const customId = nanoid()
   const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, {
-      folder: `${process.env.PROJECT_FOLDER}/Admin/ProfilePic/${customId}`,
-      resource_type: 'image'
+    folder: `${process.env.PROJECT_FOLDER}/Admin/ProfilePic/${customId}`,
+    resource_type: 'image'
   })
   const admin = await AdminModel.findByIdAndUpdate(id, {
     profilePic: {
-        secure_url,
-        public_id,
+      secure_url,
+      public_id,
     },
 
     email,
@@ -398,7 +398,7 @@ export const updateEng = async (req, res, next) => {
       folder: `${process.env.PROJECT_FOLDER}/Engineer/ProfilePic/${Eng.customId}`, //new image
     })
 
-    Eng.profilePic =public_id
+    Eng.profilePic = public_id
     Eng.profilePic = secure_url
 
   }
@@ -449,17 +449,17 @@ export const logOut = async (req, res, next) => {
 
 
 
-export const addCategory=async(req,res,next)=>{
+export const addCategory = async (req, res, next) => {
   const { id } = req.authAdmin
   const { name } = req.body
- 
+
 
 
   if (!await AdminModel.findById(id)) {
-      return next(
-        new Error('invaild id ', { cause: 400 }),
-      )
-    }
+    return next(
+      new Error('invaild id ', { cause: 400 }),
+    )
+  }
   if (await categoryModel.findOne({ name })) {
     return next(
       new Error('please enter different category name', { cause: 400 }),
@@ -477,10 +477,10 @@ export const addCategory=async(req,res,next)=>{
       folder: `${process.env.PROJECT_FOLDER}/Categories/${customId}`,
     },
   )
-  
+
   const categoryObject = {
     name,
-    
+
     Image: {
       secure_url,
       public_id,
@@ -511,7 +511,7 @@ export const updateCategory = async (req, res, next) => {
     )
   }
   // get category by id
-  
+
   const category = await categoryModel.findById(categoryId)
   if (!category) {
     return next(new Error('invalud category Id', { cause: 400 }))
@@ -537,7 +537,7 @@ export const updateCategory = async (req, res, next) => {
 
     category.name = name
     category.slug = slugify(name, '_')
-    category.updatedBy=id
+    category.updatedBy = id
   }
 
   if (req.file) {
@@ -565,10 +565,10 @@ export const getAllCategories = async (req, res, next) => {
   if (!await AdminModel.findById(id)) {
     return next(
       new Error('invaild id ', { cause: 400 }),
-    ) 
+    )
   }
   const Categories = await categoryModel.find()
-  
+
   res.status(200).json({ message: 'Done', Categories })
 }
 
@@ -579,11 +579,11 @@ export const getAllUser = async (req, res, next) => {
   if (!await AdminModel.findById(id)) {
     return next(
       new Error('invaild id ', { cause: 400 }),
-    ) 
+    )
   }
   const user = await UserModel.find()
   if (user) {
-      return res.status(200).json({ message: 'done', user })
+    return res.status(200).json({ message: 'done', user })
   }
   res.status(404).json({ message: 'in-valid Id' })
 }
@@ -592,11 +592,11 @@ export const getAllUser = async (req, res, next) => {
 // add product , update , delete 
 
 export const addProduct = async (req, res, next) => {
-  const { title, desc, price, appliedDiscount, colors, sizes, stock,name } = req.body
+  const { title, desc, price, appliedDiscount, colors, sizes, stock, name } = req.body
   const { id } = req.authAdmin
   // const { categoryId } = req.params
   // check Ids
-  const categoryExists = await categoryModel.findOne({name})
+  const categoryExists = await categoryModel.findOne({ name })
 
   if (!categoryExists) {
     return next(new Error('invalid categories', { cause: 400 }))
@@ -640,7 +640,7 @@ export const addProduct = async (req, res, next) => {
     name,
     Images,
     customId,
-    createdBy:id,
+    createdBy: id,
     slug,
   }
 
@@ -735,7 +735,14 @@ export const updateProduct = async (req, res, next) => {
 
 
 export const deleteProduct = async (req, res, next) => {
-  const { productId } = req.query
+  const { productId } = req.params
+  const { id } = req.authAdmin
+
+  if (!await AdminModel.findById(id)) {
+    return next(
+      new Error('invaild id ', { cause: 400 }),
+    )
+  }
   // check productId
   const product = await productModel.findByIdAndDelete(productId)
   if (!product) {
@@ -749,10 +756,10 @@ export const getAllProduct = async (req, res, next) => {
   if (!await AdminModel.findById(id)) {
     return next(
       new Error('invaild id ', { cause: 400 }),
-    ) 
+    )
   }
   const Products = await productModel.find()
-  
+
   res.status(200).json({ message: 'Done', Products })
 }
 
