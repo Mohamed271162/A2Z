@@ -206,7 +206,7 @@ export const addToCart = async (req, res, next) => {
       return next(new Error('inavlid product id', { cause: 400 }))
     }
   
-    const userCart = await cartModel.findOne({
+    const userCart = await CartModel.findOne({
       userId,
       'products.productId': productId,
     })
