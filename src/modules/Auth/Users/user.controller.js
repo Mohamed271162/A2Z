@@ -4,7 +4,7 @@ import { generateToken, verifyToken } from "../../../utils/tokenFunctions.js"
 import { sendEmailService } from "../../../services/sendEmailService.js"
 import { emailTemplate } from "../../../utils/emailTemplate.js"
 import { productModel } from "../../../../DB/Models/Product.model.js"
-import { CartModel } from "../../../../DB/Models/cart.model.js"
+import { CartModel } from "../../../../DB/Models/Car.model.js"
 
 export const SignUp = async (req, res, next) => {
     const { userName,
