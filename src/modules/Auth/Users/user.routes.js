@@ -13,6 +13,8 @@ router.get('/getUser', asyncHandler(uc.getAllUser))
 router.get('/getUserAccount', isAuthUser(), asyncHandler(uc.getUserAccount))
 router.get('/getallproduct', asyncHandler(uc.getAllProduct))
 router.get('/getproductinfo/:productId', isAuthUser(),asyncHandler(uc.getProductInfo))
+router.get('/productfilter',isAuthUser(), asyncHandler(uc.getProductsByTitle))
+
 
 
 router.post('/addcart',
@@ -23,4 +25,6 @@ router.delete('/deletecart',
     isAuthUser(),
     asyncHandler(uc.deleteFromCart))
 
+
+router.post('/contactmsg',isAuthUser(),asyncHandler(uc.contactUs))    
 export default router

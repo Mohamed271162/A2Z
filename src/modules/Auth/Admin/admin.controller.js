@@ -58,6 +58,7 @@ import { categoryModel } from "../../../../DB/Models/Category.model.js"
 import { productModel } from "../../../../DB/Models/Product.model.js"
 import slugify from "slugify"
 import { UserModel } from "../../../../DB/Models/user.model.js"
+import { contactModel } from "../../../../DB/Models/contact.model.js"
 
 const nanoid = customAlphabet('1234567890', 6)
 
@@ -767,7 +768,7 @@ export const deleteUser = async (req, res, next) => {
   const { userId } = req.params
   const { id } = req.authAdmin
 
-  // check engineer id
+
   const userExists = await UserModel.findById(userId)
   if (!userExists) {
     return next(new Error('invalid userId', { cause: 400 }))
@@ -779,6 +780,49 @@ export const deleteUser = async (req, res, next) => {
   res.status(200).json({ messsage: 'Deleted Done' })
 }
 
+
+export const getUserMessages = async (req, res, next) => {
+
+  const messages = await contactModel.find()
+  if (messages.length) {
+    return res.status(200).json({ messsage: 'Done', messages })
+  }
+  res.status(200).json({ messsage: 'empty inbox' })
+}
+
+
+export const getAllAdmin = async (req, res, next) => {
+
+  const admin = await AdminModel.find()
+  if (!admin) {
+    return next(new Error('admin', { cause: 400 }))
+  }
+
+  res.status(200).json({ message: 'Done', admin })
+}
+
+
+
+export const getAdminAccount = async (req, res, next) => {
+  const { id } = req.authAdmin
+  const admin = await AdminModel.findById(id)
+  if (!admin) {
+    return next(new Error('admin', { cause: 400 }))
+  }
+
+  res.status(200).json({ message: 'Done', admin })
+}
+
+export const getUserCount = async (req, res, next) => {
+  const user = await UserModel.find()
+  const count = user.length
+  if (user) {
+      return res.status(200).json({ message: 'done', count })
+  }
+  res.status(404).json({ message: 'in-valid Id' })
+}
+
+ 
 
 
 

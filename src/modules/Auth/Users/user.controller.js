@@ -5,6 +5,8 @@ import { sendEmailService } from "../../../services/sendEmailService.js"
 import { emailTemplate } from "../../../utils/emailTemplate.js"
 import { productModel } from "../../../../DB/Models/Product.model.js"
 import { CartModel } from "../../../../DB/Models/Car.model.js"
+import { contactModel } from "../../../../DB/Models/contact.model.js"
+import { paginationFunction } from "../../../utils/pagination.js"
 
 export const SignUp = async (req, res, next) => {
     const { userName,
@@ -110,15 +112,15 @@ export const logIn = async (req, res, next) => {
     res.status(200).json({ messge: 'Login done', userUpdated })
 }
 
-export const getAllUser = async (req, res, next) => {
+// export const getAllUser = async (req, res, next) => {
 
-    // const { id } = req.query
-    const user = await UserModel.find()
-    if (user) {
-        return res.status(200).json({ message: 'done', user })
-    }
-    res.status(404).json({ message: 'in-valid Id' })
-}
+//     // const { id } = req.query
+//     const user = await UserModel.find()
+//     if (user) {
+//         return res.status(200).json({ message: 'done', user })
+//     }
+//     res.status(404).json({ message: 'in-valid Id' })
+// }
 
 export const getUserAccount = async (req, res, next) => {
 
@@ -141,13 +143,13 @@ export const getAllProduct = async (req, res, next) => {
 export const getProductInfo = async (req, res, next) => {
 
     const { id } = req.authClient
-    const {productId} = req.params
+    const { productId } = req.params
 
     if (!await UserModel.findById(id)) {
         return next(
-          new Error('invaild id ', { cause: 400 }),
+            new Error('invaild id ', { cause: 400 }),
         )
-      }
+    }
     const product = await productModel.findById(productId)
     if (product) {
         return res.status(200).json({ message: 'done', product })
@@ -246,6 +248,54 @@ export const deleteFromCart = async (req, res, next) => {
     await userCart.save()
     res.status(200).json({ message: 'Done', userCart })
 }
+
+export const contactUs = async (req, res, next) => {
+    const { id } = req.authClient
+    const
+        { name,
+            email,
+            subject,
+            message
+        } = req.body
+
+
+    const contactObject = {
+        name,
+        email,
+        subject,
+        message,
+        sendBy: id,
+    }
+
+    const msg = await contactModel.create(contactObject)
+    if (!msg) {
+        return next(new Error('no msg found'))
+    }
+    res.status(200).json({ message: 'Done', msg })
+}
+
+
+export const getProductsByTitle = async (req, res, next) => {
+    const { searchKey, page, size } = req.query
+
+    const { limit, skip } = paginationFunction({ page, size })
+
+    const productsc = await productModel
+        .find({
+            $or: [
+                { title: { $regex: searchKey, $options: 'i' } },
+                { desc: { $regex: searchKey, $options: 'i' } },
+            ],
+        })
+        .limit(limit)
+        .skip(skip)
+    res.status(200).json({ message: 'Done', productsc })
+}
+
+
+
+
+
 
 
 
