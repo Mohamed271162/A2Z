@@ -292,6 +292,24 @@ export const getProductsByTitle = async (req, res, next) => {
     res.status(200).json({ message: 'Done', productsc })
 }
 
+export const getProductsBycategory = async (req, res, next) => {
+    const { searchKey, page, size } = req.query
+
+    const { limit, skip } = paginationFunction({ page, size })
+
+    const productsc = await productModel
+        .find({
+            $or: [
+                { name: { $regex: searchKey, $options: 'i' } },
+               
+            ],
+        })
+        .limit(limit)
+        .skip(skip)
+    res.status(200).json({ message: 'Done', productsc })
+}
+
+
 
 
 

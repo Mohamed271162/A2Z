@@ -803,15 +803,6 @@ export const getAllAdmin = async (req, res, next) => {
 
 
 
-export const getAdminAccount = async (req, res, next) => {
-  const { id } = req.authAdmin
-  const admin = await AdminModel.findById(id)
-  if (!admin) {
-    return next(new Error('admin', { cause: 400 }))
-  }
-
-  res.status(200).json({ message: 'Done', admin })
-}
 
 export const getUserCount = async (req, res, next) => {
   const user = await UserModel.find()

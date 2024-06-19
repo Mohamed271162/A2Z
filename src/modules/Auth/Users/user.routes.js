@@ -14,6 +14,8 @@ router.get('/getUserAccount', isAuthUser(), asyncHandler(uc.getUserAccount))
 router.get('/getallproduct', asyncHandler(uc.getAllProduct))
 router.get('/getproductinfo/:productId', isAuthUser(),asyncHandler(uc.getProductInfo))
 router.get('/productfilter',isAuthUser(), asyncHandler(uc.getProductsByTitle))
+router.get('/productbycategory',isAuthUser(), asyncHandler(uc.getProductsBycategory))
+
 
 
 

@@ -53,7 +53,6 @@ router.get('/getallproduct', isAuthAdmin(),asyncHandler(ac.getAllProduct))
 router.get('/getalluser',isAuthAdmin(), asyncHandler(ac.getAllUser))
 router.get('/getusermsg',isAuthAdmin(),asyncHandler(ac.getUserMessages))
 router.get('/getalladmin',isAuthAdmin(), asyncHandler(ac.getAllAdmin))
-router.get('/getadminaccount',isAuthAdmin(), asyncHandler(ac.getAdminAccount))
 router.get('/getuserscount', isAuthAdmin(), asyncHandler(ac.getUserCount))
 
 
