@@ -7,6 +7,7 @@ import { productModel } from "../../../../DB/Models/Product.model.js"
 import { CartModel } from "../../../../DB/Models/Car.model.js"
 import { contactModel } from "../../../../DB/Models/contact.model.js"
 import { paginationFunction } from "../../../utils/pagination.js"
+import { orderModel } from "../../../../DB/Models/order.model.js"
 
 export const SignUp = async (req, res, next) => {
     const { userName,
@@ -308,6 +309,77 @@ export const getProductsBycategory = async (req, res, next) => {
         .skip(skip)
     res.status(200).json({ message: 'Done', productsc })
 }
+
+
+export const createOrder = async (req, res, next) => {
+    const userId = req.authClient
+    const {
+      productId,
+      quantity,
+      address,
+      phoneNumbers,
+      paymentMethod,
+    } = req.body
+  
+  
+    // ====================== products check ================
+    const products = []
+    const isProductValid = await productModel.findOne({
+      _id: productId,
+      stock: { $gte: quantity },
+    })
+    if (!isProductValid) {
+      return next(
+        new Error('invalid product please check your quantity', { cause: 400 }),
+      )
+    }
+    const productObject = {
+      productId,
+      quantity,
+      title: isProductValid.title,
+      price: isProductValid.priceAfterDiscount,
+      finalPrice: isProductValid.priceAfterDiscount * quantity,
+    }
+    products.push(productObject)
+  
+    //===================== subTotal ======================
+    const subTotal = productObject.finalPrice
+    //====================== paid Amount =================
+    let paidAmount = 0
+    paidAmount = subTotal
+
+  
+    //======================= paymentMethod  + orderStatus ==================
+    let orderStatus
+    paymentMethod == 'cash' ? (orderStatus = 'placed') : (orderStatus = 'pending')
+  
+    const orderObject = {
+      userId,
+      products,
+      address,
+      phoneNumbers,
+      orderStatus,
+      paymentMethod,
+      subTotal,
+      paidAmount,
+    }
+    const orderDB = await orderModel.create(orderObject)
+
+    if (orderDB) {
+
+      // decrease product's stock by order's product quantity
+      await productModel.findOneAndUpdate(
+        { _id: productId },
+        {
+          $inc: { stock: -parseInt(quantity) },
+        },
+      )
+    
+      return res.status(201).json({ message: 'Done', orderDB })
+    }
+    return next(new Error('fail to create your order', { cause: 400 }))
+  }
+  
 
 
 

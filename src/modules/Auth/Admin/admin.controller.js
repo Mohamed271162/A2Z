@@ -59,6 +59,7 @@ import { productModel } from "../../../../DB/Models/Product.model.js"
 import slugify from "slugify"
 import { UserModel } from "../../../../DB/Models/user.model.js"
 import { contactModel } from "../../../../DB/Models/contact.model.js"
+import { orderModel } from "../../../../DB/Models/order.model.js"
 
 const nanoid = customAlphabet('1234567890', 6)
 
@@ -176,6 +177,10 @@ export const signInO = async (req, res, next) => {
   if (admin.OTP.toString() !== OTP.toString()) {
     return next(new Error(' In-valid OTP', { cause: 400 }))
   }
+
+  if (admin.isVerify == false) {
+    return next(new Error(' Please Verified your Account', { cause: 400 }))
+  }
   const token = generateToken({
     payload: {
       OTP,
@@ -183,6 +188,8 @@ export const signInO = async (req, res, next) => {
     },
     signature: process.env.SIGN_IN_TOKEN_SECRET,
   })
+
+
 
   const adminUpdated = await AdminModel.findOneAndUpdate(
     { phoneNumber },
@@ -795,7 +802,7 @@ export const getAllAdmin = async (req, res, next) => {
 
   const admin = await AdminModel.find()
   if (!admin) {
-    return next(new Error('admin', { cause: 400 }))
+    return next(new Error('admin not Found', { cause: 400 }))
   }
 
   res.status(200).json({ message: 'Done', admin })
@@ -808,12 +815,39 @@ export const getUserCount = async (req, res, next) => {
   const user = await UserModel.find()
   const count = user.length
   if (user) {
-      return res.status(200).json({ message: 'done', count })
+    return res.status(200).json({ message: 'done', count })
   }
   res.status(404).json({ message: 'in-valid Id' })
 }
 
- 
+export const getEngCount = async (req, res, next) => {
+  const Eng = await EngineerModel.find()
+  const count = Eng.length
+  if (user) {
+    return res.status(200).json({ message: 'done', count })
+  }
+  res.status(404).json({ message: 'in-valid Id' })
+}
+
+
+export const getAllOrder = async (req, res, next) => {
+
+  const order = await orderModel.find()
+  if (!order) {
+    return next(new Error('Not Found', { cause: 400 }))
+  }
+
+  res.status(200).json({ message: 'Done', order })
+}
+
+export const getEngVerified = async (req, res, next) => {
+
+  const unverifiedEngineers = await EngineerModel.find({ isConfirmed: false });
+
+  res.status(200).json({ message: 'Done', unverifiedEngineers })
+}
+
+
 
 
 
