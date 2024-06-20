@@ -57,9 +57,13 @@ router.get('/getuserscount', isAuthAdmin(), asyncHandler(ac.getUserCount))
 router.get('/getengcount', isAuthAdmin(), asyncHandler(ac.getEngCount))
 router.get('/getallorder',isAuthAdmin(), asyncHandler(ac.getAllOrder))
 router.get('/getsomeeng',isAuthAdmin(), asyncHandler(ac.getEngVerified))
+router.get('/subtotal',isAuthAdmin(), asyncHandler(ac.getOrdersSubTotal))
 
-
-
+router.put(
+  '/updateengverify/:engId',
+  isAuthAdmin(),
+  asyncHandler(ac.updateEngVerify),
+)
 
 
 router.delete('/deleteproduct/:productId',isAuthAdmin(), asyncHandler(ac.deleteProduct))

@@ -847,8 +847,40 @@ export const getEngVerified = async (req, res, next) => {
   res.status(200).json({ message: 'Done', unverifiedEngineers })
 }
 
+export const updateEngVerify = async(req,res,next)=>{
+  const {engId} = req.params
+  const {Verify} = req.body
+
+  const Engineer = await EngineerModel.findByIdAndUpdate(
+    engId,
+    {
+        isConfirmed: Verify,
+    },
+    {
+        new: true,
+    },
+)
+  if(!Engineer){
+    return next(
+      new Error('Fail Update', { cause: 400 }),)
+  }
+  res.status(200).json({ message: 'Done', Engineer})
+
+}
 
 
+export const getOrdersSubTotal = async (req, res, next) => {
+  const order = await orderModel.find()
+  let subtotals =0
+  for (const sub of order) {
+    subtotals += sub.subTotal
+    
+  }
+  if (order) {
+    return res.status(200).json({ message: 'done', subtotals })
+  }
+  res.status(404).json({ message: 'in-valid Id' })
+}
 
 
 
