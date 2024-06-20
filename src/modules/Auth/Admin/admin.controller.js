@@ -823,7 +823,7 @@ export const getUserCount = async (req, res, next) => {
 export const getEngCount = async (req, res, next) => {
   const Eng = await EngineerModel.find()
   const count = Eng.length
-  if (user) {
+  if (Eng) {
     return res.status(200).json({ message: 'done', count })
   }
   res.status(404).json({ message: 'in-valid Id' })
