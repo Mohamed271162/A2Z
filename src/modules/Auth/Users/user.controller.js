@@ -314,7 +314,7 @@ export const getProductsBycategory = async (req, res, next) => {
 
 export const fromCartoOrder = async (req, res, next) => {
     const userId = req.authClient
-    const { cartId } = req.params
+    const { cartId } = req.query
     const { address, phoneNumbers, paymentMethod } = req.body
 
     const cart = await CartModel.findById(cartId)
