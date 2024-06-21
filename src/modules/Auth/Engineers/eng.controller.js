@@ -289,6 +289,10 @@ export const logOut = async (req, res, next) => {
     await EngineerModel.findByIdAndUpdate(id, {
         status: 'Offline'
     })
+
+    await EngineerModel.findByIdAndDelete(id,{
+        token,
+    })
     res.json({ message: "log out done" })
 }
 
