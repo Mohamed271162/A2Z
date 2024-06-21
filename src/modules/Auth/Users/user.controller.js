@@ -313,11 +313,11 @@ export const getProductsBycategory = async (req, res, next) => {
 
 export const fromCartoOrder = async (req, res, next) => {
     const userId = req.authClient
-    const { cartId } = req.query
+    const { cartId } = req.params
     const { address, phoneNumbers, paymentMethod } = req.body
 
     const cart = await CartModel.findById(cartId)
-    if (!cart) {
+    if (!cart || cart.products.length) {
         return next(new Error('please fill your cart first', { cause: 400 }))
     }
 
