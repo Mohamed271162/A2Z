@@ -351,7 +351,7 @@ export const fromCartoOrder = async (req, res, next) => {
         paymentMethod,
         subTotal,
         paidAmount,
-       
+
     }
     const orderDB = await orderModel.create(orderObject)
     if (orderDB) {
@@ -380,28 +380,28 @@ export const getAll = async (req, res, next) => {
     const { id } = req.authClient
     const admin = await UserModel.findById(id);
     if (!admin) {
-      return res.status(404).json({ error: 'admin not found' });
+        return res.status(404).json({ error: 'admin not found' });
     }
     const Engs = await EngineerModel.find()
     // .limit(limit).skip(skip)
     res.status(200).json({ message: 'Done', Engs })
-  }
-  
-  export const getEngBy = async (req, res, next) => {
+}
+
+export const getEngBy = async (req, res, next) => {
     const { id } = req.authClient
     const { engid } = req.query
     const admin = await UserModel.findById(id);
     if (!admin) {
-      return res.status(404).json({ error: 'admin not found' });
+        return res.status(404).json({ error: 'admin not found' });
     }
     const eng = await EngineerModel.findById(engid);
     if (!eng) {
-      return res.status(404).json({ error: 'eng not found' });
+        return res.status(404).json({ error: 'eng not found' });
     }
     // const { searchKey, page, size } = req.query
-  
+
     // const { limit, skip } = paginationFunction({ page, size })
-  
+
     // const Engineer = await EngineerModel
     //     .find(
     //       // {
@@ -414,7 +414,27 @@ export const getAll = async (req, res, next) => {
     //     // .limit(limit)
     //     // .skip(skip)
     res.status(200).json({ message: 'Done', eng })
-  }
+}
+
+
+
+export const logOut = async (req, res, next) => {
+    const { id } = req.authClient
+
+    const userExcest = await UserModel.findById(id)
+    if (!userExcest) {
+        return res.json({ message: 'invaled user id' })
+    }
+
+    await UserModel.findByIdAndUpdate(id, {
+        status: 'Offline'
+    })
+
+    await UserModel.findByIdAndDelete(id, {
+        token,
+    })
+    res.json({ message: "log out done" })
+}
 
 
 
