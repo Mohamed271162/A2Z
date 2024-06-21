@@ -318,7 +318,7 @@ export const fromCartoOrder = async (req, res, next) => {
     const { address, phoneNumbers, paymentMethod } = req.body
 
     const cart = await CartModel.findById(cartId)
-    if (!cart || cart.products.length) {
+    if (!cart) {
         return next(new Error('please fill your cart first', { cause: 400 }))
     }
 
