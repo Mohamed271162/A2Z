@@ -8,6 +8,7 @@ import { CartModel } from "../../../../DB/Models/Car.model.js"
 import { contactModel } from "../../../../DB/Models/contact.model.js"
 import { paginationFunction } from "../../../utils/pagination.js"
 import { orderModel } from "../../../../DB/Models/order.model.js"
+import { EngineerModel } from "../../../../DB/Models/Engineer.model.js"
 
 export const SignUp = async (req, res, next) => {
     const { userName,
@@ -372,6 +373,48 @@ export const fromCartoOrder = async (req, res, next) => {
     }
     return next(new Error('fail to create your order', { cause: 400 }))
 }
+
+export const getAll = async (req, res, next) => {
+    // const { page, size } = req.query
+    // const { limit, skip } = paginationFunction({ page, size })
+    const { id } = req.authClient
+    const admin = await UserModel.findById(id);
+    if (!admin) {
+      return res.status(404).json({ error: 'admin not found' });
+    }
+    const Engs = await EngineerModel.find()
+    // .limit(limit).skip(skip)
+    res.status(200).json({ message: 'Done', Engs })
+  }
+  
+  export const getEngBy = async (req, res, next) => {
+    const { id } = req.authClient
+    const { engid } = req.query
+    const admin = await UserModel.findById(id);
+    if (!admin) {
+      return res.status(404).json({ error: 'admin not found' });
+    }
+    const eng = await EngineerModel.findById(engid);
+    if (!eng) {
+      return res.status(404).json({ error: 'eng not found' });
+    }
+    // const { searchKey, page, size } = req.query
+  
+    // const { limit, skip } = paginationFunction({ page, size })
+  
+    // const Engineer = await EngineerModel
+    //     .find(
+    //       // {
+    //         // $or: [
+    //         //     { userName: { $regex: searchKey, $options: 'i' } },
+    //         //     { phoneNumber: { $regex: searchKey, $options: 'i' } },
+    //         // ],
+    //     // }
+    //   )
+    //     // .limit(limit)
+    //     // .skip(skip)
+    res.status(200).json({ message: 'Done', eng })
+  }
 
 
 

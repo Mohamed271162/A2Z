@@ -16,6 +16,8 @@ router.get('/getproductinfo/:productId', isAuthUser(),asyncHandler(uc.getProduct
 router.get('/productfilter',isAuthUser(), asyncHandler(uc.getProductsByTitle))
 router.get('/productbycategory',isAuthUser(), asyncHandler(uc.getProductsBycategory))
 router.post('/createorder/:cartId', isAuthUser(), asyncHandler(uc.fromCartoOrder))
+router.get('/getengbyid',isAuthUser(), asyncHandler(uc.getEngBy))
+router.get('/getalleng',isAuthUser(), asyncHandler(uc.getAll))
 
 
 
