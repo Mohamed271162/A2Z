@@ -109,6 +109,10 @@ export const logIn = async (req, res, next) => {
         return next(new Error('invalid login credentials', { cause: 400 }))
     }
 
+    if (engineer.isConfirmed == false) {
+        return next(new Error(' Please Verified your Account', { cause: 400 }))
+      }
+
     const token = generateToken({
         payload: {
             email,
