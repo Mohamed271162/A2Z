@@ -38,7 +38,7 @@ export const SignUp = async (req, res, next) => {
     const isEmailSent = sendEmailService({
         to: email,
         subject: 'Confirmation Email',
-        // message: `<a href=${conirmationlink}>Click here to confirm </a>`,
+        message: `<a href=${conirmationlink}>Click here to confirm </a>`,
         message: emailTemplate({
             link: conirmationlink,
             linkData: 'Click here to confirm',
