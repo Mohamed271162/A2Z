@@ -110,6 +110,10 @@ export const logIn = async (req, res, next) => {
         return next(new Error('invalid login credentials pass', { cause: 400 }))
     }
 
+    if (engineer.isConfirmed == false) {
+        return next(new Error(' Please Verified your Account', { cause: 400 }))
+      }
+
     const token = generateToken({
         payload: {
             email,
@@ -285,6 +289,10 @@ export const logOut = async (req, res, next) => {
     }
     await EngineerModel.findByIdAndUpdate(id, {
         status: 'Offline'
+    })
+
+    await EngineerModel.findByIdAndDelete(id,{
+        token,
     })
     res.json({ message: "log out done" })
 }

@@ -474,25 +474,25 @@ export const addCategory = async (req, res, next) => {
     )
   }
 
-  if (!req.file) {
-    return next(new Error('please upload a category image', { cause: 400 }))
-  }
+  // if (!req.file) {
+  //   return next(new Error('please upload a category image', { cause: 400 }))
+  // }
 
-  const customId = nanoid()
-  const { secure_url, public_id } = await cloudinary.uploader.upload(
-    req.file.path,
-    {
-      folder: `${process.env.PROJECT_FOLDER}/Categories/${customId}`,
-    },
-  )
+  // const customId = nanoid()
+  // const { secure_url, public_id } = await cloudinary.uploader.upload(
+  //   req.file.path,
+  //   {
+  //     folder: `${process.env.PROJECT_FOLDER}/Categories/${customId}`,
+  //   },
+  // )
 
   const categoryObject = {
     name,
 
-    Image: {
-      secure_url,
-      public_id,
-    },
+    // Image: {
+    //   secure_url,
+    //   public_id,
+    // },
     customId,
     createdBy: id,
   }
