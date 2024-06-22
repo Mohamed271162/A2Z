@@ -493,7 +493,7 @@ export const addCategory = async (req, res, next) => {
     //   secure_url,
     //   public_id,
     // },
-    customId,
+    // customId,
     createdBy: id,
   }
 
