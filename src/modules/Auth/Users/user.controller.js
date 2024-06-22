@@ -88,6 +88,10 @@ export const logIn = async (req, res, next) => {
     if (!user) {
         return next(new Error('invalid login credentials', { cause: 400 }))
     }
+
+    if (user.isConfirmed== false) {
+        return next(new Error(' Please Verified your Account', { cause: 400 }))
+      }
     // const isPassMatch = pkg.compareSync(password, user.password)
     // if (!isPassMatch) {
     //     return next(new Error('invalid login credentials', { cause: 400 }))
