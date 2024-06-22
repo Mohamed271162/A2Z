@@ -9,6 +9,7 @@ import { contactModel } from "../../../../DB/Models/contact.model.js"
 import { paginationFunction } from "../../../utils/pagination.js"
 import { orderModel } from "../../../../DB/Models/order.model.js"
 import { EngineerModel } from "../../../../DB/Models/Engineer.model.js"
+import { categoryModel } from "../../../../DB/Models/Category.model.js"
 
 export const SignUp = async (req, res, next) => {
     const { userName,
@@ -439,6 +440,19 @@ export const logOut = async (req, res, next) => {
     })
     res.json({ message: "log out done" })
 }
+
+
+export const getAllCategories = async (req, res, next) => {
+    const { id } =req.authClient
+    if (!await UserModel.findById(id)) {
+      return next(
+        new Error('invaild id ', { cause: 400 }),
+      )
+    }
+    const Categories = await categoryModel.find()
+  
+    res.status(200).json({ message: 'Done', Categories })
+  }
 
 
 
