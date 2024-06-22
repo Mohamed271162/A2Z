@@ -429,14 +429,12 @@ export const logOut = async (req, res, next) => {
     await UserModel.findByIdAndUpdate(id, {
         status: 'Offline'
     })
-    const log = userExcest.token
-    await UserModel.deleteOne( {
-        log
+
+    await UserModel.findByIdAndDelete(id, {
+        token,
     })
     res.json({ message: "log out done" })
-
 }
-
 
 
 
