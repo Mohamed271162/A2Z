@@ -25,7 +25,6 @@ router.get('/logout/:userid', isAuthAdmin(), asyncHandler(ac.logOut))
 router.post(
   '/addcategory',
   isAuthAdmin(),
-  multerCloudFunction(allowedExtensions.Image).single('image'),
   asyncHandler(ac.addCategory),
 )
 
