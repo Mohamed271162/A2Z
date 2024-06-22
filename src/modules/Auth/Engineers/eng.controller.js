@@ -100,19 +100,20 @@ export const confirmEmail = async (req, res, next) => {
 //=============================== Log In ===============================
 export const logIn = async (req, res, next) => {
     const { email, password } = req.body
-    const engineer = await EngineerModel.findOne({ email })
-    if (!engineer) {
+    const eng=await EngineerModel.findOne({email})
+    // const engineer = await EngineerModel.findOne({ email })
+    if (!eng) {
         return next(new Error('invalid login credentials', { cause: 400 }))
     }
-    const isPassMatch = pkg.compareSync(password, engineer.password)
+    const isPassMatch = pkg.compareSync(password, eng.password)
     if (!isPassMatch) {
-        return next(new Error('invalid login credentials', { cause: 400 }))
+        return next(new Error('invalid login credentials pass', { cause: 400 }))
     }
 
     const token = generateToken({
         payload: {
             email,
-            id: engineer._id,
+            id: eng._id,
         },
         signature: process.env.SIGN_IN_TOKEN_SECRET,
     })
@@ -135,7 +136,7 @@ export const logIn = async (req, res, next) => {
 
 export const communityPage = async (req, res, next) => {
 
-    const { id } = req.authUser
+    const { id } =  req.authUser
     if (!req.files) {
         return next(new Error('please upload pictures', { cause: 400 }))
     }
@@ -288,3 +289,72 @@ export const logOut = async (req, res, next) => {
     res.json({ message: "log out done" })
 }
 
+//Get All Posts  
+
+export const getAllPosts = async (req, res, next) => {
+    const { id } =  req.authUser
+    if (!await EngineerModel.findById(id)) {
+      return next(
+        new Error('invaild id ', { cause: 400 }),
+      )
+    }
+    const posts = await EngineerModel.find({},{Gallery:1})
+  
+    res.status(200).json({ message: 'Done', posts })
+  }
+
+  // update Engineer
+  
+  export const updateProfile = async (req, res, next) => {
+    const { id } = req.authUser
+    const { userid } = req.params
+    const { userName,phoneNumber,address } = req.body
+  
+    if (!await EngineerModel.findById(id)) {
+      return next(
+        new Error('invaild id ', { cause: 400 }),
+      )
+    }
+   
+  
+    const eng = await EngineerModel.findById(userid)
+    if (!eng) {
+      return next(new Error('invalud category Id', { cause: 400 }))
+    }
+  
+     {
+      // different from old name
+      if (eng.address == address) {
+        return next(
+          new Error('please enter different name from the old engineer address', {
+            cause: 400,
+          }),
+        )
+      }
+      if (eng.userName == userName) {
+        return next(
+          new Error('please enter different name from the old engineer name', {
+            cause: 400,
+          }),
+        )
+      }
+      if (eng.phoneNumber == phoneNumber) {
+        return next(
+          new Error('please enter different name from the old engineer phoneNumber', {
+            cause: 400,
+          }),
+        )
+      }
+    
+  
+      eng.phoneNumber = phoneNumber
+      eng.userName = userName
+      eng.address = address
+      eng.UpdatedBy = id
+    }
+  
+    
+  
+    await eng.save()
+    res.status(200).json({ message: 'Updated Done', eng })
+  }
