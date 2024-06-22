@@ -6,7 +6,7 @@ const EngineerSchema = new Schema(
     {
         userName: {
             type: String,
-            required: true,
+            // required: true,
         },
         email: {
             type: String,
@@ -31,12 +31,13 @@ const EngineerSchema = new Schema(
 
         phoneNumber: {
             type: String,
-            required: true,
+            // required: true,
         },
         address: [
             {
                 type: String,
-                required: true,
+                // required: true,
+                
             },
         ],
         // role: {
