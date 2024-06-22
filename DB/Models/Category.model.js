@@ -14,16 +14,16 @@ const categorySchema = new Schema(
     //   lowercase: true,
     //   // required: true,
     // },
-    Image: {
-      secure_url: {
-        type: String,
-        required: true,
-      },
-      public_id: {
-        type: String,
-        required: true,
-      },
-    },
+    // Image: {
+    //   secure_url: {
+    //     type: String,
+    //     required: true,
+    //   },
+    //   public_id: {
+    //     type: String,
+    //     required: true,
+    //   },
+    // },
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: 'Admin',
