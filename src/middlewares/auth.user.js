@@ -14,7 +14,7 @@ export const isAuthUser = () => {
         }
   
         const splitedToken = authorization.split(' ')[1]
-  
+        
         try {
           const decodedData = verifyToken({
             token: splitedToken,
