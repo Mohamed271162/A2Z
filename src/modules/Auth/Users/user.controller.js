@@ -452,6 +452,17 @@ export const getAllCategories = async (req, res, next) => {
   }
 
 
+export const getAllproductFromCart = async (req,res,next)=>{
+    const {id} = req.authClient
+    const {cartId} = req.query 
+    const cart = await CartModel.findById(cartId)
+    if (!cart) {
+        return res.json({ message: 'invalid cart id' })
+    }
+    res.status(200).json({ message: 'Done', cart })
+}
+
+
 
 
 

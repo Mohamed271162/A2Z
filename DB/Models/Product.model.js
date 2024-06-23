@@ -63,6 +63,11 @@ const productSchema = new Schema(
     
 
     // ======= Images section =======
+    ImageCover: {                //شهادة اثبات هويه 
+      secure_url: String,
+      public_id: String,
+  },
+
     Images: [
       {
         secure_url: {

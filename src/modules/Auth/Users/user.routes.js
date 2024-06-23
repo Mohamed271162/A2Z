@@ -20,7 +20,7 @@ router.get('/getengbyid',isAuthUser(), asyncHandler(uc.getEngBy))
 router.get('/getalleng',isAuthUser(), asyncHandler(uc.getAll))
 router.post('/logout',isAuthUser(), asyncHandler(uc.logOut))
 router.get('/getallcategory', isAuthUser(),asyncHandler(uc.getAllCategories))
-
+router.get('/getcart',isAuthUser(),asyncHandler(uc.getAllproductFromCart))
 
 
 router.post('/addcart',
