@@ -90,9 +90,9 @@ export const logIn = async (req, res, next) => {
         return next(new Error('invalid login credentials', { cause: 400 }))
     }
 
-    if (user.isConfirmed== false) {
+    if (user.isConfirmed == false) {
         return next(new Error(' Please Verified your Account', { cause: 400 }))
-      }
+    }
     // const isPassMatch = pkg.compareSync(password, user.password)
     // if (!isPassMatch) {
     //     return next(new Error('invalid login credentials', { cause: 400 }))
@@ -379,6 +379,42 @@ export const fromCartoOrder = async (req, res, next) => {
     return next(new Error('fail to create your order', { cause: 400 }))
 }
 
+// Delete entire cart
+export const deleteCart = async (req, res, next) => {
+    const {id}= req.authClient
+
+    let cart = await CartModel.findOneAndDelete({ userId: id.toString() });
+    if (!cart)
+        return next(new Error('cart not found', { cause: 400 }))
+    res.json({ message: "Cart deleted" });
+}
+
+//  Delete cart item
+export const deleteCartItem = async (req, res, next) => {
+    const { productId } = req.params
+    const {id}= req.authClient
+
+
+    let cart = await CartModel.findOneAndUpdate(
+        { userId: id.toString() },
+        { $pull: { cartItems: { _id: productId} } },
+        { new: true }
+    );
+    console.log(cart);
+    res.json({ message: "Deleted", cart });
+}
+
+
+
+export const getAllproductFromCart = async (req, res, next) => {
+    const { id } = req.authClient
+    const cart = await CartModel.findOne({ userId: id })
+    if (!cart) {
+        return res.json({ message: 'invalid cart id' })
+    }
+    res.status(200).json({ message: 'Done', cart })
+}
+
 export const getAll = async (req, res, next) => {
     // const { page, size } = req.query
     // const { limit, skip } = paginationFunction({ page, size })
@@ -433,33 +469,25 @@ export const logOut = async (req, res, next) => {
 
     await UserModel.findByIdAndUpdate(id, {
         status: 'Offline',
-        token :'null'
+        token: 'null'
     })
     res.json({ message: "log out done" })
 }
 
 
 export const getAllCategories = async (req, res, next) => {
-    const { id } =req.authClient
+    const { id } = req.authClient
     if (!await UserModel.findById(id)) {
-      return next(
-        new Error('invaild id ', { cause: 400 }),
-      )
+        return next(
+            new Error('invaild id ', { cause: 400 }),
+        )
     }
     const Categories = await categoryModel.find()
-  
+
     res.status(200).json({ message: 'Done', Categories })
-  }
-
-
-export const getAllproductFromCart = async (req,res,next)=>{
-    const {id} = req.authClient
-    const cart = await CartModel.findOne({userId:id})
-    if (!cart) {
-        return res.json({ message: 'invalid cart id' })
-    }
-    res.status(200).json({ message: 'Done', cart })
 }
+
+
 
 
 
