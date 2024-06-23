@@ -454,8 +454,7 @@ export const getAllCategories = async (req, res, next) => {
 
 export const getAllproductFromCart = async (req,res,next)=>{
     const {id} = req.authClient
-    const {cartId} = req.query 
-    const cart = await CartModel.findById(cartId)
+    const cart = await CartModel.findOne({userId:id})
     if (!cart) {
         return res.json({ message: 'invalid cart id' })
     }
