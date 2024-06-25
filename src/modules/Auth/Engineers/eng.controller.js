@@ -1,5 +1,6 @@
 
 import { EngineerModel } from '../../../../DB/Models/Engineer.model.js'
+import { UserModel } from '../../../../DB/Models/user.model.js'
 import { sendEmailService } from '../../../services/sendEmailService.js'
 import cloudinary from '../../../utils/coludinaryConfigrations.js'
 import { emailTemplate } from '../../../utils/emailTemplate.js'
@@ -327,25 +328,28 @@ export const updateProfile = async (req, res, next) => {
 
     const eng = await EngineerModel.findById(userid)
     if (!eng) {
-        return next(new Error('invalud category Id', { cause: 400 }))
+        return next(new Error('invalud ENg Id', { cause: 400 }))
     }
 
     {
-        // different from old name
+       if(address){ // different from old name
         if (eng.address == address) {
             return next(
                 new Error('please enter different name from the old engineer address', {
                     cause: 400,
                 }),
             )
+        }}
+        else if(userName){
+            if (eng.userName == userName) {
+                return next(
+                    new Error('please enter different name from the old engineer name', {
+                        cause: 400,
+                    }),
+                )
+            }
         }
-        if (eng.userName == userName) {
-            return next(
-                new Error('please enter different name from the old engineer name', {
-                    cause: 400,
-                }),
-            )
-        }
+       else {
         if (eng.phoneNumber == phoneNumber) {
             return next(
                 new Error('please enter different name from the old engineer phoneNumber', {
@@ -353,7 +357,7 @@ export const updateProfile = async (req, res, next) => {
                 }),
             )
         }
-
+    }
 
         eng.phoneNumber = phoneNumber
         eng.userName = userName
@@ -366,3 +370,19 @@ export const updateProfile = async (req, res, next) => {
     await eng.save()
     res.status(200).json({ message: 'Updated Done', eng })
 }
+
+//get User by Eng
+
+export const getuserBy = async (req, res, next) => {
+    const { id } = req.authUser
+    const { userid } = req.params
+    const eng = await EngineerModel.findById(id);
+    if (!eng) {
+      return res.status(404).json({ error: 'eng not found' });
+    }
+    const user = await UserModel.findById(userid);
+    if (!user) {
+      return res.status(404).json({ error: 'user not found' });
+    }
+    res.status(200).json({ message: 'Done', user })
+  }

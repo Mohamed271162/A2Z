@@ -52,10 +52,7 @@ const AdminSchema = new Schema(
             enum: ['male', 'female', 'Not specified'],
         },
         
-        // phone:{
-        //     type:Number,
-        //     default:'+20100000000'
-        // },
+       
         logoutAt:Date,
 
         age: Number,
