@@ -188,7 +188,7 @@ export const addToCart = async (req, res, next) => {
     if (userCart) {
         // update quantity
         let productExists = false
-        for (const product of userCart.products) {
+        for (const product of userCart.cartItems) {
             if (productId == product.productId) {
                 productExists = true
                 product.quantity = quantity
@@ -196,12 +196,12 @@ export const addToCart = async (req, res, next) => {
         }
         // push new product
         if (!productExists) {
-            userCart.products.push({ productId, quantity })
+            userCart.cartItems.push({ productId, quantity })
         }
 
         // subTotal
         let subTotal = 0
-        for (const product of userCart.products) {
+        for (const product of userCart.cartItems) {
             const productExists = await productModel.findById(product.productId)
             subTotal += productExists.priceAfterDiscount * product.quantity || 0
         }
@@ -209,7 +209,7 @@ export const addToCart = async (req, res, next) => {
             { userId },
             {
                 subTotal,
-                products: userCart.products,
+                products: userCart.cartItems,
             },
             {
                 new: true,
@@ -220,7 +220,7 @@ export const addToCart = async (req, res, next) => {
 
     const cartObject = {
         userId,
-        products: [{ productId, quantity }],
+        cartItems: [{ productId, quantity }],
         subTotal: productCheck.priceAfterDiscount * quantity,
     }
     const cartDB = await CartModel.create(cartObject)
@@ -242,14 +242,14 @@ export const deleteFromCart = async (req, res, next) => {
 
     const userCart = await CartModel.findOne({
         userId,
-        'products.productId': productId,
+        'cartItems.productId': productId,
     })
     if (!userCart) {
         return next(new Error('no productId in cart '))
     }
-    userCart.products.forEach((ele) => {
+    userCart.cartItems.forEach((ele) => {
         if (ele.productId == productId) {
-            userCart.products.splice(userCart.products.indexOf(ele), 1)
+            userCart.cartItems.splice(userCart.cartItems.indexOf(ele), 1)
         }
     })
     await userCart.save()

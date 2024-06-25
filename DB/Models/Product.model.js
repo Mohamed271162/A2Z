@@ -39,13 +39,13 @@ const productSchema = new Schema(
       required: true,
       default: 1,
     },
-    name:String,
+    name: String,
 
     // ======= Related Ids section =======
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: 'Admin',
-      required: true, 
+      required: true,
     },
     updatedBy: {
       type: Schema.Types.ObjectId,
@@ -59,14 +59,14 @@ const productSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Category',
     },
-   
-    
+
+
 
     // ======= Images section =======
-    ImageCover: {                //شهادة اثبات هويه 
+    ImageCover: {
       secure_url: String,
       public_id: String,
-  },
+    },
 
     Images: [
       {

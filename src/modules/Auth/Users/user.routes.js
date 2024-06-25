@@ -31,6 +31,8 @@ router.delete('/deletecart',
     asyncHandler(uc.deleteFromCart))
     
 router.get('/getcart',isAuthUser(),asyncHandler(uc.getAllproductFromCart))
-router.delete('/deleteentirecart',isAuthUser(),asyncHandler(uc.deleteCart))
+router.delete('/deletecart',isAuthUser(),asyncHandler(uc.deleteCart))
+router.delete('/deleteitemcart/:productId',isAuthUser(),asyncHandler(uc.deleteCartItem))
+
 router.post('/contactmsg',isAuthUser(),asyncHandler(uc.contactUs))    
 export default router

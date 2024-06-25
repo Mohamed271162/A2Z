@@ -623,18 +623,35 @@ export const addProduct = async (req, res, next) => {
   }
   const customId = nanoid()
 
-  const Images = []
-  const publicIds = []
-  for (const file of req.files) {
-    const { secure_url, public_id } = await cloudinary.uploader.upload(
-      file.path,
-      {
-        folder: `${process.env.PROJECT_FOLDER}/Categories/${categoryExists.customId}/Products/${customId}`,
-      },
-    )
-    Images.push({ secure_url, public_id })
-    publicIds.push(public_id)
+  let Images = []
+  let ImageCover
+
+  for (const file in req.files) {
+      if (file == "Images") {
+          for (let index = 0; index < req.files[file].length; index++) {
+              const { path } = req.files[file][index]
+              const { secure_url, public_id } = await cloudinary.uploader.upload(path,
+                  {
+                      folder: `${process.env.PROJECT_FOLDER}/Categories/Product/Images/${customId}`
+                  }
+              )
+              Images.push({ secure_url, public_id })
+          }
+      }
+      if (file == "imageCover") {
+          for (let index = 0; index < req.files[file].length; index++) {
+              const { path } = req.files[file][index]
+              const { secure_url, public_id } = await cloudinary.uploader.upload(path,
+                  {
+                     folder: `${process.env.PROJECT_FOLDER}/Categories/Product/ImageCover/${customId}`
+                  }
+              )
+              ImageCover = { secure_url, public_id }
+          }
+      }
   }
+
+
 
   const productObject = {
     title,
@@ -650,6 +667,8 @@ export const addProduct = async (req, res, next) => {
     customId,
     createdBy: id,
     slug,
+    ImageCover
+      ,
   }
 
   const product = await productModel.create(productObject)
@@ -847,34 +866,34 @@ export const getEngVerified = async (req, res, next) => {
   res.status(200).json({ message: 'Done', unverifiedEngineers })
 }
 
-export const updateEngVerify = async(req,res,next)=>{
-  const {engId} = req.params
-  const {Verify} = req.body
+export const updateEngVerify = async (req, res, next) => {
+  const { engId } = req.params
+  const { Verify } = req.body
 
   const Engineer = await EngineerModel.findByIdAndUpdate(
     engId,
     {
-        isConfirmed: Verify,
+      isConfirmed: Verify,
     },
     {
-        new: true,
+      new: true,
     },
-)
-  if(!Engineer){
+  )
+  if (!Engineer) {
     return next(
       new Error('Fail Update', { cause: 400 }),)
   }
-  res.status(200).json({ message: 'Done', Engineer})
+  res.status(200).json({ message: 'Done', Engineer })
 
 }
 
 
 export const getOrdersSubTotal = async (req, res, next) => {
   const order = await orderModel.find()
-  let subtotals =0
+  let subtotals = 0
   for (const sub of order) {
     subtotals += sub.subTotal
-    
+
   }
   if (order) {
     return res.status(200).json({ message: 'done', subtotals })
