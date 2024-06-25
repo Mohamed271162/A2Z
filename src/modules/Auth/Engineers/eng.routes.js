@@ -20,7 +20,7 @@ router.post('/Profile',isAuth(),multerCloudFunction(allowedExtensions.Image).sin
 router.get('/getUser',isAuth(),asyncHandler(ec.getEngAccount))
 router.get('/getallposts',isAuth(),asyncHandler(ec.getAllPosts))
 router.put('/updatprofile/:userid', isAuth(), asyncHandler(ec.updateProfile))
-router.get('/getengbyid',isAuth(), asyncHandler(ec.getuserBy))
+router.get('/getengbyid/:engId',isAuth(), asyncHandler(ec.getuserBy))
 
 
 export default router
