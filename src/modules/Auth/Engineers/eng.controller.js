@@ -1,5 +1,6 @@
 
 import { EngineerModel } from '../../../../DB/Models/Engineer.model.js'
+import { UserModel } from '../../../../DB/Models/user.model.js'
 import { sendEmailService } from '../../../services/sendEmailService.js'
 import cloudinary from '../../../utils/coludinaryConfigrations.js'
 import { emailTemplate } from '../../../utils/emailTemplate.js'
@@ -371,3 +372,17 @@ export const updateProfile = async (req, res, next) => {
 }
 
 //get User by Eng
+
+export const getuserBy = async (req, res, next) => {
+    const { id } = req.authUser
+    const { userid } = req.params
+    const eng = await EngineerModel.findById(id);
+    if (!eng) {
+      return res.status(404).json({ error: 'eng not found' });
+    }
+    const user = await UserModel.findById(userid);
+    if (!user) {
+      return res.status(404).json({ error: 'user not found' });
+    }
+    res.status(200).json({ message: 'Done', user })
+  }
