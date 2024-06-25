@@ -424,7 +424,7 @@ export const deleteEng = async (req, res, next) => {
     return next(new Error('invalid engineerId', { cause: 400 }))
   }
   await EngineerModel.deleteOne({ engExists })
-  engExists.deletedBy = id
+  // engExists.deletedBy = id
   // //Cloudinary
   // await cloudinary.api.delete_all_resources(
   //     `${process.env.PROJECT_FOLDER}/Engineer/ProfilePic/${engExists.customId}`,
