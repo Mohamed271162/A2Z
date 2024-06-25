@@ -36,12 +36,10 @@ const categorySchema = new Schema(
     customId: String,
   },
   {
-    // toObject: { virtuals: true }, // for res.json()
-    // toJSON: { virtuals: true }, // for console.log()
+    
     timestamps: true,
   },
 )
-
 //======================================== Vitruals ========================================
 // categorySchema.virtual('subCategories', {
 //   ref: 'subCategory',
